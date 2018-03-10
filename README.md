@@ -1,0 +1,3 @@
+# Computer Science Notebooks
+
+This repo houses my personal notes on various CS books, lectures, and lessons. Rather than creating a dozen different repositories that I'll never revisit once I've completed the content, it simply made more sense to stuff them all into one location. CS Notebooks is the sister project to Anatomy of Code, in which I'm teaching myself various tools and languages by _picking apart their documents page by page_.
