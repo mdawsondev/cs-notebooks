@@ -122,4 +122,148 @@ Basic challenge recommendations; nothing that noteworthy, but here's a list of t
 
 ## Part II: Introduction to Object-oriented Programming (OOP)
 
+### Programming Paradigms
+
+The major programming paradigms are:
+
+* Imperative Programming
+* Functional Programming
+* Object-oriented Programming
+
+**State** is another word for the data your program has access to.
+
+**Imperative programming** can be thought of as "do this, then that." It's a sequence of steps moving toward a solution.
+
+**Functional programming** originates from lambda calculus; it involved writing functions that when given the same input always return the same output. Functional program only uses functions, *classes are not used*.
+
+These functions do not rely on data outside of the current function, and they don't change data that exists outside of the current function.
+
+**Object-oriented programming** involves creating objects that interact with each other. Objects are created through classes, which can be thought of as the blueprint. Classes are defined through `class Variable:` declaration, and then can be invoked through `myVar = myClass()`, just like creating any other object (i.e. `myDict = dict()`).
+
+Methods are added to classes via `def` within the scope of the class. They're called the same way other languages call them: through `myobject.mymethod()`.
+
+Classes can also take advantage of the `self` property, which functions like JavaScript's `this` property. `self` is tethered to the object upon creation. This must be set inside the `__init__` function.
+
+``` py
+class Orange:
+    print("Orange created!")
+
+    def __init__ (self):
+        self.color = "orange"
+        self.weight = 10
+
+    def print_orange (self):
+        print(self)
+        print(self.color)
+        print(self.weight)
+
+>>>orange.print_orange()
+```
+
+Alternatively, `__init__` can be passed variables like JavaScript's class constructors.
+
+``` py
+class Orange:
+    def __init__(self, weight, color, mold):
+        self.weight = weight
+        self.color = color
+```
+
+`self` can be passed through any functions inside the object blueprint. `def rot(self, days, temperature)` would still pass a `self` referencing the object it resides inside.
+
+### Chapter 13: The Four Pillars of Object-oriented Programming
+
+Not all languages support every programming paradigm. Haskell, for example, is a functional language which does not support OOP. Python, Java, Ruby, and JavaScript are OOP languages that can support functional programming as well.
+
+Python supports class inheritence, where the child object can adopt the properties of the parent object. Similar to how JavaScript's `extends` works, the main object an be passed as a parameter.
+
+``` py
+class Adult():
+    def __init__ (self, name):
+        self.name = name
+
+    def print_name (self):
+        print(self.name)
+
+class Kid(Adult):
+    def print_cartoon(self, favorite_cartoon):
+        print('{}\'s favorite cartoon is {}'.format(self.name, favorite_cartoon))
+
+son = Kid("John Smith")
+print(son.name)
+son.print_cartoon('DuckTales')
+```
+
+Python also supports **polymorphism**, which means it doesn't need to overload methods in order to pass different typed parameters.
+
+In OOP, **abstraction** refers to the idea of *abstracting* an object into a blueprint. If we wanted to create a Person object, we would try to generalize what properties a person generally has (name, eye-color, etc.) and then build our blueprint around accepting a variety of properties.
+
+In OOP, **encapsulation** means we don't expose internal data to outside influence. For example, we should scope data so it can't be accessed.
+
+**Composition**, though not strictly part of the four pillars of OOP, is the concept of "has a" relationships. For example, if we have a class of Dog and a class of Person, we could pass Person("Mick Jagger") to dog through a param, tethering it together without causing immutability: `dog = Dog('Stanley', 'Pitbull', mick)` where `mick` is our instanced person.
+
+### Chapter 14: More Object-oriented Programming
+
+Python uses automatic garbage collection (not noted in the book), however it's important to understand how the concept of pointers work.
+
+Variables "point" to an object, e.g. `number = 100` is a variable, `number` pointing to the integer object `100`. When `number` is reassigned, `100` is destroyed in data if it isn't been assigned to an additional variable.
+
+Python differs from JavaScript in that all objects work like arrays *in the sense that they point to the original object*. If you create `x = 10` and `y = x`, mutating `x` will expose `y` to the same changes **because `y` is pointing to the integer object, not the value of `x`**. `x+=1` will cause `print(y)` to output 10, not 11, because `y` points to the object '10' while x is now pointing to the object '11'.
+
+The keyword `is` can be used to check if two objects are the same object. `x is y` will return True or False.
+
+`none` represents the absense of a value, the same as JavaScript's `null`. It can be used to set a variable, and is different than an undefined variable (NameError).
+
+Just to note, classes are objects (because Python is an object-based language, just like JS).
+
+**Classes** gift their variables to their instances, they're not pointers. If you change either the class variable or the instance's instanced variable, it will not chance the original or the gifted variable.
+
+Knowing this, it means instances can **override** their parent methods and variables.
+
+Python **does not have private variables**, but it's resolved by using convention. Giving a variable or method an underscore indicates it *shouldn't* be used outside of the object. This is still unsafe accessable data, whereas in a language like C#, this data is *protected* and **only** accessable by code inside the object itself. That's not mentioned in the book, but it really should be. This creates potential security flaws for systems that require data security, like banks.
+
+Python supports the `super` function, which allows you to pass data to a parent class's functions. This grants the ability for sub-classes to have the original function with additional functionality.
+
+``` py
+class Mammal:
+    hp = 100
+    def myFunc (param):
+        hp -= param
+
+class Tiger(Mammal):
+    def tigFunc (param):
+        print("Printing!")
+        super ().myFunc(20)
+
+>>>myTiger = Tiger()
+>>>myTiger.tigFunc(20)
+"Printing!"
+>>>myTiger.hp
+80
+>>>myTiger.myFunc(20)
+>>>myTiger.hp
+60
+```
+
+Like `__init__`, `__repr__` adds additional structure to our classes. By passing a return into `__repr__` we can call the object and have it change the default call value when we type `myInstancedObject`, which would normally print out object data in the terminal.
+
+``` py
+def __repr__ (self):
+    return self.name '''or whatever'''
+```
+
+### Chapter 15: Bringing It All Together
+
+This chapter built a couple of card games, nothing noteworthy of writing.
+
+### Chapter 16: Practice
+
+This chapter mentioned a couple of exercises.
+
+1. Build an OOP Blackjack.
+2. Build a web scraper.
+3. Find a Python project on pip and use it in a program.
+
+## Part III: Introduction to Programming Tools
+
 _Saved._
