@@ -266,4 +266,87 @@ This chapter mentioned a couple of exercises.
 
 ## Part III: Introduction to Programming Tools
 
+### Chapter 17: Bash
+
+Lots of light notes on the bash CLI and a subsection on Vim. Not really worth making notes over because I intend to read an entirely different book on vi and Vim. Did note `less file.txt` to read files in the terminal, easier than `cat`.
+
+There was also mention of script, `$PATH` and pipes `|`.
+
+### Chapter 18: Regular Expressions
+
+A brief introduction to `grep` and regular expressions. Didn't learn a lot of new information, but in grep, character ranges are done with [[:alpha:]] and grep can pipe results into another grep.
+
+To use regular expressions in Python, you need to call `import re`. It's enclosed in quotes, rather than in `//` like JavaScript.
+
+Overall, RegEx in Python and Grep follow similar standards as other languages.
+
+### Chapter 19: Package Managers
+
+There's a quick introduction to `apt-get` and `Homebrew` which function for Linux and Macs, respectively. Not listed, but `choco` is similar on Windows if installed; Windows 10 does offer `OneGet`, but no one seems to like it at this time.
+
+Python features `pip` which works very similarly to NodeJS's `npm`. Pip is included with Python and can be invoked via `pip <command> [options]`, where commands are install and download. You can specify the packages you want by tagging them with `==`, or just omit the version call which will download the most recent version. You may need to invoke `sudo` on linux.
+
+`sudo pip install Flask==0.10.1` would install v0.10.1 of Flask.
+
+Installed packages are stored in a folder called `../site-packages` which exists in the Python path; when you `import` in python, it looks in this folder for dependancies.
+
+Flask could then be used as `from flask import Flask` to set the `Flask` variable for use.
+
+Packages you've installed can be viewed with `pip freeze`, and can be written into a file with `pip freeze > mytext.txt`. Uninstalling packages can be done with `pip uninstall [package]`.
+
+### Chapter 20: Version Control
+
+Fundamental discussion on GitHub repositories and `git`. `SVN` is briefly mentioned, but not covered. Basic functionality of version control (`add`, `pull`, `commit`, `push`) is covered, but nothing noteworthy.
+
+### Chapter 21: SQLite
+
+Basic discussion of databases (NoSQL vs SQL is briefly mentioned). The author mentioned investing time into NoSQL; if anyone's reading this, MongoDB is worth looking at.
+
+SQLite is a lightweight database using SQL. The author says `sqlite` is already available in the CLI, but that's a lie. [The latest version of SQLite can be downloaded here](https://www.sqlite.org/download.html), but needs to be installed via the Windows path command. I'm lazy, so [here's SQLite online](https://sqliteonline.com/).
+
+I couldn't get this section to play nicely with either the installed SQLite3 nor the emulator online, so I just passed by it. I intend to review SQL elsewhere and this brief overview doesn't seem necessary to the next section.
+
+### Chapter 22: Bringing it All Together
+
+This section discusses creating a webscraper. There's a light primer on HTML and a discussion on using `beautifulsoup` for parsing HTML from Google News. I'll complete the project on the side - no noteworthy content.
+
+### Chapter 23: Practice
+
+Almost no content in this chapter, the exercises listed are as follows.
+
+1. Build a scraper for another side (not Google News).
+2. Write a program and checkout an old version (use git).
+3. Download pylint with pip, read the documentation and try it out.
+
+## Part IV: Introduction to Computer Science
+
+### Chapter 24: Data Structures & Algorithms
+
+Light discussion on algorithms, time complexity, and modulo; various algorithms are given samples.
+
+* **Bubble Sort** - Not very effective, but good for understanding sort algorithms.
+* **Sequential Search** _O(n)_ - Going through each item one-by-one until a match is found.
+* **Binary Search** _O(log(n))_ - Dividing remaining positions by half each time until a match is found.
+* **Recursion** - Recursive algorithms follow three laws of recursion: they have a **base case**, they change the state and move toward the base case, it calls itself recursively.
+
+Note, a **base case** is what stops the algorithm from running. There's a lot of side notes about recursive algorithms here, but I already understand the gist and I'm far too lazy to take more notes where they're not needed. 👌
+
+**Abstract data types** can be thought of like classes to objects. Abstraction of data is the "idea" of a certain type of data structure. A list, for example, is an abstraction that can be implemented in ways like an array or linked list.
+
+**Nodes** can be thought of as a point on a graph, and are used in linked lists, trees, and graphs.
+
+**Stacks** is a last-in-first-out data structure, best thought of like a stack of dishes - to get the dish on the bottom, you have to remove any dish on top. Stacks are great for recursion and reversing things.
+
+**Linked lists** are made of a series of nodes where each node points to the next node in the list. In a **singly linked list**, all nodes know bout the node ahead of them, but don't keep track of the previous node. A **doubly linked list** is the same concept, except it additionally keeps track of the node behind it. Singly linked lists can be navigated by opening the next node until there is no next node; doubly linked lists can keep track of their previous node by setting it to memory.
+
+An array must have all of the same data types; Python's list data structure is built internally in C as an array of pointers.
+
+A *tree** is a data structure that could best be thought of as a tree. The file system on a computer is an example. **Binary trees** are made of nodes containing data, and can house a left and right child node. Child nodes keep track of their parents.
+
+Navigation of a binary tree can be done using the *breadth first search* and *depth first search* algorithms. Thinking of trees as a table, a breadth first search will navigate each row one by one, while a depth first search will navigate by column.
+
+**Hash tables** are instances store via a hash function, which will return or process a hashed line to instantly retrieve data. Python's dictionary object is built around hash tables. The book poorly explains this concept though, and I feel like I need to pull external sources to help better understand this concept.
+
+### Chapter 25: Relational Database Design
+
 _Saved._
