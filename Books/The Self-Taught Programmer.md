@@ -349,4 +349,98 @@ Navigation of a binary tree can be done using the *breadth first search* and *de
 
 ### Chapter 25: Relational Database Design
 
-_Saved._
+### Chapter 26: Computer Architecture
+
+### Chapter 27: Network Programming
+
+### Chapter 28: Bringing It All Together
+
+### Chapter 29: Practice
+
+## Part V: Programming for Production
+
+### Chapter 30: Testing
+
+Development processes can be thought of as a way of "splitting software development into distinct phases containing activities with the intent of better planning and management." The **Waterfall** model is linear design pattern that is made of five phases.
+
+1. Planning and Requirements Analysis
+2. Defining Requirements
+3. System Design
+4. Implementation and Deployment
+5. System Testing and System Maintenance.
+
+**Phase 1** is about carefully planning around the problem you need to resolve. What are your requirements, what do you need to complete the task? TL;DR: Brainstorming.
+
+**Phase 2** is about defining and documenting requirements.
+
+**Phase 3** is about discussing different design approaches and outlining a development process in a document called *Design Document Specifications*. This stage discusses the architectual design of the project (modules, implementation, etc.).
+
+**Phase 4** is about building the product based on the DDS.
+
+**Phase 5** is the final phase where the product is tested and put into production.
+
+#### On Testing
+
+**Assertions** are statements programmers expect to be True, and throw exceptions if they are False. Python uses the `assert` keyword. If the `assert` keyword returns false, an AssertionError is thrown.
+
+Testing is usually done in four phases.
+
+1. Unit Testing
+2. Integration Testing
+3. System Testing
+4. Acceptance Testing
+
+**1: Unit Testing** is the act of creatining individual tests that will test against one aspect in a piece of code with an assertion. Unit tests tackle code by pieces, such as function, and run through a general use-case for all functions, classes, and methods. This means testing against things you aren't expecting (like passing an int where a string is being called), and testing boundary conditions (what happens when a list gets too full).
+
+Unit testing is usually done within a unit testing framework; in JavaScript's case, I chose to use Jest for this aspect. Python has a built-in unit testing framework called `unittest` which comes with various assertion methods.
+
+**2: Integration testing** follows unit testing - it's the act of ensuring modules function together as expected. In banking, you might check transfer modules against balance modules to ensure each module is passing data correctly.
+
+**3: System testing** follows integration testing, where the application is tested against system limitations. GUI issues, heavy workloads, etc. A good example would be beta releases or throwing a small number of early access users at a server.
+
+**4: Acceptance testing** is the final stage of testing, which checks to make sure the project meets the agreements of the stakeholders. It's got almost nothing to do with programming, but it's still an important process in development.
+
+In addition to the testing workflow, there's also the theory of **Test Driven Development**, or TDD. TDD is a development technique that requires the programmer to write unit tests *before writing their programs.* This enforces the idea that you can't avoid unit testing, and forces you to think about your design requirements before starting to code.
+
+*There's a large section here about unit testing in Python that I don't feel is worth taking notes on, but will be practice in a code along.*
+
+**Writing good tests** means tests are **repeatable across any environment**. OS X should work on Windows without having to make any changes; an example of violation would be hard-coded directory paths (Windows and OS X use different pathing systems). Tests that can not be processed on multiple platforms need to be rewritten. They should also be **fast**, **run often** and **should not affect one another**.
+
+**Code coverage** is the percentage of code covered by testing. While it doesn't measure efficiency, it's useful for finding untested parts of code. This is generally expected to be at or above 80%.
+
+The idea behind testing while you build is to save yourself time from having to run a full program half a million times just to test various inputs. Note to self: you know what you did; stop doing that and write test codes.
+
+### Chapter 31: Best Programming Practices
+
+### Chapter 32: Bringing It All Together
+
+## Part VI: Land a Job
+
+### Chapter 33: Your First Programming Job
+
+This chapter houses some typical information about the difference of front and back-end programming, as well as advice for getting started. Doing basic programming work for someone you know on Upwork is a good start, as is contributing to open source projects on GitHub.
+
+Interviews are discussed a bit; focus is put on LinkedIn and networking with recruiters. Start connecting with recruiters and talk to them about open positions - you don't always need to *search* for positions! Networking has benefits too. **Talk to recruiters!**
+
+Typical processes with recruitment start with a non-technical formal interview with the recruiter, then a technical phone screen with one or more members of the entineering team. Typically if they can't white board you in person, they'll send you to a link where you can edit code and ask you to solve a problem.
+
+There may be a third round of interviewing where you meet-and-greet the team, possibly have lunch, and talk about your technical skills. You may be further challenged.
+
+Interviews are typically focused on two sections: **data structures** and **algorithms**. LeetCode is mentioned as a platform for practicing.
+
+### Chapter 34: Working on a Team
+
+General information about working on a team: master the basics and don't constantly ask your coworkers things you can google. It's important to "tread lightly" around another programmer's code and don't spend a ton of time fixing someone else's code if it works. The best way to feel around this subject is to ask the company about their "engineering culture". If you think you're a better fit with another company, seek them out and leave the one you're in.
+
+[Improve Code Without Anyone Hating You](https://medium.com/@mscccc/jr-developers-5-how-to-improve-code-without-anyone-hating-you-34a7218b387f) was a recommended article in this section.
+
+Everyone experiences imposter syndrome; don't feel overwhelmed. Stay humble, admit when you don't know something, and try to learn it.
+
+Other than that, continue learning; these resources are recommended (in addition to [Hacker News](https://news.ycombinator.com/)).
+
+* The Progmatic Programmer
+* Design Patterns
+* Code Complete
+* Compilers: Principles, Techniques, and Tools
+* Introduction to Algorithms
+* Problem Solving with Data Structures and Algorithms
