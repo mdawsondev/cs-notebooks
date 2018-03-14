@@ -349,13 +349,41 @@ Navigation of a binary tree can be done using the *breadth first search* and *de
 
 ### Chapter 25: Relational Database Design
 
+Chapter 25 was a very rough discription of how database design works, but not written well enough that I feel like I got much out of it. Keywords like **normalization** and **referential integrety** were discussed, but poorly explained. I intend to read more about database design from another source.
+
 ### Chapter 26: Computer Architecture
+
+This chapter begins with a discussion about understanding binary and ensuring you know how a computer interprets the base 2 counting system (two digits vs. the normalized base 10 system, which only uses ten digits).
+
+Numbers, strings, etc. are all represented in the computer as binary. Strings are mapped to numbers, and numbers to binary. "a" for example is stored as the decimal 97, and 97 is stored in binary as 1100001. Hardware only understands binary.
+
+Higher level hardware is made of a CPU and Memory. The CPU executes instructions provided by a program; computers can have multiple CPUs (said to be multi-core). Memory is where everything on the computer is stored, via RAM and ROM. The CPU combined with the memory make the "brain" of the computer. I/O is the transfer of data to and from this pair to any other device.
+
+Machine code is made of binary (or hex which is base 16) that can be executed by the HDD. Abstraction is used to manage complexity, and programming languages are built on abstraction. Higher-level programming languages have more extraction beneath them, and the more abstractions below, the slower code will run.
+
+This is why C is considered "close to the metal," and is used for things like drivers and hardware configuration. It runs quick, and memory management is handled by the programmer - not the compiler.
+
+The chapter goes on to explain how binary begets Assembly and these languages stack for more or less abstraction. Compilers vs. interpreters are discussed - compilers are translated into machine code **before** it can be run, whereas interpretation can be executed directly by passing it through an interpreter. Binary is further discussed in how compilers decompile into machine code.
+
+**Concurrency** is the act of a program running in overlapping time periods (multitasking) on a single-core machine. **Parallellism** is when tasks run at the same time on multicore processors.
 
 ### Chapter 27: Network Programming
 
+The internet communicates using the client-server model, which states that there is a server actively listening for requests sent by a client. Requests are made via HTTP, and responses are returned by the server (HTML, JS, CSS, etc.). URLs are basically variables for IP addresses which is a unique number distributed by the DNS.
+
+TCP/IP protocols are agreed upon standards for communicating across the internet. It's also known as a protocol stack - made of four layers, each being a program responsible for accomplishing a task and communicating to the layers above. These layers are the **Application Layer**, the **Transport Layer**, the **Interney Layer**, and the **Network Layer**.
+
+When you connect to a URL, the Application Layer forms an HTTP request. This is then passed to the Transport Layer, which wraps the request. Data is distributed as packets, sent one at a time. The layer uses a checksum to make sure all packets are delivered.
+
+This is then stamped with an "address" by the Internet Layer, which contains the IP of the server and TTL. The envelope is considered a packet. After this has been wrapped, it's sent to the Network Layer, which uses hardware and software to physically send the data. It's passed through various nodes to the receiving server, until it's retrieved by the receiving-end Application Layer. The server then goes through the same process sending back that the requestwas valid or invalid; if valid, it returns data requested.
+
 ### Chapter 28: Bringing It All Together
 
+This chapter covers creating and firing up a server and client socket relationship via Python. As with the other projects in this book, I'll revisit it outside of note taking.
+
 ### Chapter 29: Practice
+
+Nothing noteworthy.
 
 ## Part V: Programming for Production
 
@@ -412,7 +440,27 @@ The idea behind testing while you build is to save yourself time from having to 
 
 ### Chapter 31: Best Programming Practices
 
+Always write code as if it's made to be read by other people. If you're tying to solve a common problem, see if there's already a solution online. Follow the **DRY** method (Don't Repeat Yourself) when possible - you shouldn't be copying and pasteing sections of code.
+
+Write with **orthogonality** in mind - one section of code should not interfere with another section of code. Modules should not make changes to other modules; components should be "plug-and-play."
+
+Every piece of data should have one representation; for example, an API key doesn't need to exist in two different sections. Create one API varaible and call it as needed.
+
+Functions should do one specific thing. Limiting functions allows your code to be cleaner and lets you isolate and diagnose bugs faster.
+
+Using **dummy data** will allow you to code more quickly than having to pull new data every time you fire up your application.
+
+**Logging** feedback will help you figure out where things went wrong; keeping logs is a great way to monitor progress and see when faulty data outputs.
+
+Other notes include working with a powerful native IDE, I personally like VSCode and it does everything powerhouses can do. Submit code reviews for feedback - Stack Exchange has a [Code Review](https://codereview.stackexchange.com/) section. A final note is made about **security**; security is easy to ignore, but it shouldn't be. Make sure you have minimized your attack possibilities and foolproof your programs.
+
 ### Chapter 32: Bringing It All Together
+
+This chapter discusses scraping lyrics and building a word cloud using the Waterfall model with TDD. It will be revisited outside of this notebook.
+
+#### Practice
+
+Nothing noteworthy.
 
 ## Part VI: Land a Job
 
