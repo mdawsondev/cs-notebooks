@@ -117,11 +117,74 @@ There are also fallback and polyfill features that can be implemented to support
 
 ### Summary
 
-HTML5 is the collection of new elements and new JavaScript APIs, forming a larger web platform foundation. 
+HTML5 is the collection of new elements and new JavaScript APIs, forming a larger web platform foundation.
 
 ## Finding Parts of the Page
 
+Brief mention of using `getElementsByClassName` but that's been depreciated for general use cases in favor of `querySelector` on the DOM. `querySelectorAll` will pull all nodes associated with the selection. Valid selections work the same as they did in jQuery or targeting via CSS, i.e. `.`, `#`, etc. depending on needs.
+
+Just a reminder, although it appears that selection is returning an array of elements, it's actually returning a `NodeList`. `NodeList` is an object that can be iterated. `forEach` is also mentioned as a node iteration.
+
+When changing elements in the DOM, the DOM will update depending on whether you're working with a live result or static result environment. `querySelector` will return static result while `getElementByClassName` will work with live results.
+
+_Aside: New elements are called via `document.createElement('ELEMENT')`._
+
 ## Working with User Input
+
+### New Elements (Overview)
+
+* `input type="color"`: Add color-picker element.
+* `datalist`: Appears as predefined options when associated with `input`.
+* `input type="datetime"`: Adds a date-picking element.
+* `input type="datetime-local"`: Adds a date-picking element for local TZ.
+* `input type="email"`: Adds email functionality to mobile KB.
+* `input type="url"`: Adds url functionality to mobile KB.
+* `input type="tel"`: Adds telephone functionality to mobile KB.
+* `input type="month"`: Adds a month/year selector.
+* `input type="number"`: Up/down number selection and mobile KB support.
+* `input type="range"`: Outputs a slider with start/stop/step control.
+* `input type="week"`: Allows selection of single week of given year.
+* `input type="time"`: Allows selection of a specific time. Mobile KB.
+* `input type="search"`: Similar to text with an 'x' to clear input.
+
+### Native Validation
+
+Don't blindly trust user input. Validation and sanitization is an important way to ensure security and prevent data from breaking.
+
+* `Value Missing` evaluates to `true` if an element has the `required` attribute and the value is empty.
+* `Type Mismatch` evaluates `true` when value is not a match to the declared type.
+* `Pattern Mismatch` evaluates `true` when value doesn't match given regular expression via `pattern="/RegExp"` on an input.
+* `Too Long` evaluates `true` when the value length is longer than the `maxlength="n"` property, where n is an integer.
+* `Range Underflow` returns `true` when range type's value is smaller than min attribute (`min="n"`).
+* `Range Overflow` returns `true` when range type's value is larger than max attribute (`max="n"`).
+* `Step Mismatch` returns `true` when value is not possible given the step value (i.e. modulo).
+* `Valid` returns `true` when all other validation rules return `false`. Implies a valid form submission.
+
+This is good for a simple validation via client-side forms, but shouldn't be trusted beyond some basic enforcement rules.
+
+### Demo Notes
+
+These notes were taken from the HTML5 demo and markup sections.
+
+* `autofocus` is an attibute that can instantly set focus to any element without using JS. Only one input element can house `autofocus` at any time.
+* `placeholder="Placeholder Words"` allows a ghost-based placeholder text without using a default value.
+* `number` inputs only allow up/down functionality, no text input.
+* `datalist` lets you fill in a preformed text or custom input.
+* `novalidate` allows you to skip validation rules; must be attached to a `form` element.
+
+Repeat on previous notes, `required`, `pattern` are also allowed features.
+
+There were some notes about various browsers supporting different elements (like IE not supporting the `number` type), but this could have changed since the video was made. These things should be checked on CanIUse.
+
+### Psuedo Classes
+
+The new CSS structure with HTML5 allows psuedo classes to target various states of elements without having to implement any JavaScript. CSS can target via `:required` to give hints to the user that items are required. Validity can also be targed via `:invalid` or `:valid`.
+
+### Custom Validation
+
+This stuff was implemented using `data` markup and JavaScript functionality - I don't see it being exlusively HTML5 related so I'm not going to bother taking notes here. The takeaway is just reflecting on various selectors and applying properties to them.
+
+I'm also pretty sure there's a custom validation message feature inside of HTML5 which he doesn't even mention.
 
 ## Music & Video
 
