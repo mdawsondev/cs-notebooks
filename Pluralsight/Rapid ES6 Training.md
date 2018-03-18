@@ -275,13 +275,44 @@ Need to revisit this; much confuse.
 
 ### String Extensions
 
+* `myString.startsWith('Word') // Boolean`
+* `myString.endsWith('Word') // Boolean`
+* `myString.includes('letters') // Boolean`
+
+* `'\u{1f3c4}'` Unicode is available in what's called "astral plane values".
+* `myString.normalize()` will handle unusual characters more accurately.
+* `myString.repeat(n)` will repeat the string n-times.
+
 ### Number Extensions
+
+* `Number.parseInt` and `Number.parseFloat` are equal to their originals, but you're better off not using the global calls.
+* `Number.isNaN` will compare accurate NaN comparison.
+* `Number.isFinite` checks against finite numbers; it won't translate strings to numbers.
+* `Number.isInteger(3)` check against real ints.
+* `Number.isSafeInteger(a)` checks if floating point will return safe ints.
+
+Number constants exist now too.
+
+### Math Extensions
+
+A number of math extensions have been added for arithmetic and trug. `cbrt()` for cube root for example. There's many, and I'm not writing them down. 👍
+
+* `Math.sign(n)` checks against the sign of the number available.
+* `Math.trunc(n)` is good for cutting the integer out; good for random.
 
 ### RegExp Extensions
 
+* `/regex/.test('word')` will return a bool. If using a unicode, we need to add the flag `/u` to our pattern.
+* The new `//y` flag will test the pattern against the last index. You can define the lastIndex of your pattern to test against the location, where `/900/y.lastIndex = 3` testing against `'800900'` will return true.
+* Regular expressions now hoave the `.flag` property. The flags will always be returned in the order `gimuy`.
+
 ### Function Extensions
 
+Functions now offer the `.name` property. Anonymous functions return their variable property. Classes will return their name, and the name of a method will return the method name. `Function.name` isn't writable, but it can be configured with `Object.defineProperty()`.
+
 ## Iterators, Generators, and Promises
+
+Over my head at midnight; will return to this later.
 
 ### Iterators
 
@@ -299,19 +330,42 @@ Need to revisit this; much confuse.
 
 ### Array Extensions
 
+Arrays used to have an issue where passing a single numerical value to an `Array(n)` function would return an array of n-length. Passing a number like 90000 would create an array with 90000 empty positions. This has been fixed in ES6 with `Array.of(n)` where `.of` passes a new array with the contents, and not the count.
+
+`Array.from` works similarly. Without having him say it, I think it works a lot like `myArr.map()` where you're acting against the individual items of an existing array and then passing them to a new array.
+
+``` js
+let amounts = [800, 810, 820];
+let salaries = Array.from(amounts, v => v+100);
+```
+
+We're taking the amounts array, passing the elements to the lambda function, and then creating a new array with the results. `.from` also takes a third parameter, an object, which will become the lexical `this` in the funtion. This must be passed with `function()`, because arrow functions don't allow changes from `this`.
+
+Arrays offer a new `.fill()` property that will fill an array's **existing positions**. It accepts a second parameter that says where to start filling via index. `[,,,].fill(900, 1)`. A third param is also available, offering a non-inclusive index to stop at. Negative parameters can be passed to start from the other end of the array.
+
+`myArray.find(value => value > 5)` is another array feature that will return the **first truthy value** to pass the logic test. This differs from `.filter()`, which will return **all** elements that pass the logic. This couples with `.findIndex()` returning the first value. `.findIndex()` differs from `.indexOf()`, where `.indexOf()` expects a value as the first parameter, and `.findIndex()` expects a callback.
+
+`myArray.copyWithin(a, b)` will copy the value TO index `a` FROM index `b` in the same array. Passing a third param, `c`, allows you to copy the number of positions from the start destination. This is **not** a single positional copy! The array will copy everything FROM point `b` and onward.
+
+Passing the spread operator on an array and invoking `.entries()` will display each entry and the index of that entry; each of these results are an array. `let ids = ['a', 'b', 'c']; console.log(...ids.entries()); //[0, 'a'], [1, 'b'], [2, 'c']`
+
+`.keys()` is also available to pass to a spread operator on an array, returning the keys. On a standard array this will only return the index. Alternatively, calling `.values()` will return the values of the array.
+
 ### Array Buffers and Typed Arrays
+
+
 
 ### DataView and Endianness
 
-### Map and WeakMAp
+### Map and WeakMap
 
 ### Set and WeakSet
 
 ### Subclassing
 
-## The REflect API
+## The Reflect API
 
-### Construction and Method CAlls
+### Construction and Method Calls
 
 ### Reflect and Prototypes
 
