@@ -312,19 +312,31 @@ Functions now offer the `.name` property. Anonymous functions return their varia
 
 ## Iterators, Generators, and Promises
 
-Over my head at midnight; will return to this later.
+This section focuses heavily on Generators, and I don't feel like I learned enough to justify taking notes here because the whole lesson went a bit over my head. This will be revisited in another course and I may return to make more notes here after that.
 
 ### Iterators
 
+See header note.
+
 ### Generators
+
+See header note.
 
 ### Yeilding in Generators
 
+See header note.
+
 ### throw and return
+
+See header note.
 
 ### Promises
 
-### More Promise Feaatures
+See header note.
+
+### More Promise Features
+
+See header note.
 
 ## Arrays and Collections
 
@@ -524,22 +536,77 @@ console.log(r.getId()); // Passes 88 because the literal was attached.
 
 ### Reflect and Properties
 
+`Reflect.get(target, propertyKey[, receiver])` will get a property's value.
 
+This whole section is losing me since I've never played with `Reflect` before so I'm just skipping ahead and will return to studying these weird new objects in another resource.
 
 ### Reflect and Property Extensions
+
+Me no smart. Has emoji instead. 👾
 
 ## The Proxy API
 
 ### Proxies Defined
 
+Proxy is an object that wraps another object or function. With the proxy we can monitor access to the object or function inside the proxy. This is great for security.
+
+The technical term for the object wrapper is the "handler," which is what we give access to. A proxy will allow you to intercept various calls to the target object and return handler properties rather than the internal object's properties.
+
+_Aside: The main use of the Reflect API is to work with the Proxy API (handler objects)._
+
 ### Available Traps
+
+The Proxy API can trap the following calls: `handler.construct()`, `handler.apply()`, `handler.getPrototypeOf()`, `handler.setPrototypeOf`.
+
+Additionally the handler can intercept `.get()`, `.set()`, `.has()`, `.ownKeys()`.
+
+Can't trap comparisons, `typeof`, `instanceof`, operations (target+""), or object calls `string("")`.
 
 ### Get by Proxy
 
+Approval Proxy:
+``` JS
+function Employee () {
+  this.name = "Milton Waddams";
+  this.salary = 0;
+}
+var e = new Employee();
+var p = new Proxy(e, {
+  get: function(target, prop, rexeiver) {
+    return Reflect.get(target, prop, receiver);
+  }
+})
+console.log(p.salary); // Returns 0, proxy passes through reflect.
+```
+
+Denial Proxy:
+``` JS
+function Employee () {
+  this.name = "Milton Waddams";
+  this.salary = 0;
+}
+var e = new Employee();
+var p = new Proxy(e, {
+  get: function(target, prop, rexeiver) {
+    if (prop === 'salary') return 'Denied';
+    return Reflect.get(target, prop, receiver);
+  }
+})
+console.log(p.salary); // Returns Denied.
+```
+
 ### Calling Functions by Proxy
+
+This is beyond me at this point; will return to this in another course.
 
 ### A Proxy as a Prototype
 
+This is beyond me at this point; will return to this in another course.
+
 ### Revocable Proxies
 
-🦑 Meow.
+This is beyond me at this point; will return to this in another course.
+
+_Note to self: need to revisit **generators**, **Reflect/Proxy**, and **iterators/promises** in external sources!_
+
+_"Meow."_ - 🦑
