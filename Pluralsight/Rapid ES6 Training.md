@@ -351,25 +351,180 @@ Passing the spread operator on an array and invoking `.entries()` will display e
 
 `.keys()` is also available to pass to a spread operator on an array, returning the keys. On a standard array this will only return the index. Alternatively, calling `.values()` will return the values of the array.
 
-### Array Buffers and Typed Arrays
+### ArrayBuffers and Typed Arrays
 
+An **ArrayBuffer** is an array of 8-bit bytes. _Typed_ arrays, which refer to numeric types, exist on top of ArrayBuffers. This allows us to have arrays of integers and floats.
 
+We use bracket notation of ArrayBuffers just as we would a normal array. Calling a number into a new ArrayBuffer will create an array of that size in bytes.
+
+``` JS
+let buffer = new ArrayBuffer(1024);
+buffer.byteLength // 1024
+buffer[0] = 0xff;
+console.log(buffer[0]); // 255
+```
+
+Once we have an ArrayBuffer set up with 8-bit bytes, we can add a typed array on top and use those bytes.
+
+* `Int8Array()`
+* `Uint8Array()` Unsigned.
+* `Uint8ClampedArray()` Clamped forces high of 255 and low of 0.
+* `Int16Array()`
+* `Uint16Array()`
+* `Int32Array()`
+* `Uint32Array()`
+* `Float32Array()`
+* `Float64Array()`
+
+``` JS
+let buffer = new ArrayBuffer(1024);
+let a = new Int8Array(buffer);
+a[0] = 0xff;
+console.log(a[0]); // -1 since it's signed.
+```
+
+Who am I kidding, I have almost no idea what's going on here. I'll have to revisit this nonsense. 👎
 
 ### DataView and Endianness
 
+In **big endian** the most significant byte is stored first, in **little endian** the least significant is stored first.
+
+**DataView** offers a variety of methods for looking at the endianness of ArrayBuffers.
+
+What does this mean? Who knows. ¯\\\_(ツ)_/¯
+
 ### Map and WeakMap
+
+ES6 offers two new classes, `Map` and `WeakMap`. `Map` is technically used all the time in JavaScript - every object can be considered a map of keys and values. In an `Object`, however, these keys must be strings or numbers. You can't use an object as a key - this is what `Map` was created for.
+
+``` JS
+let employee1 = { name: 'Jake' };
+let employee2 = { name: 'Janet' };
+
+let employees = new Map();
+employees.set(employee1, 'ABC');
+employees.set(employee2, '123');
+
+console.log(employees.get(employee1));
+```
+
+Methods include `.set()` to add entries, `.delete()` to remove entries, `.clear()` to remove **all** entries, `.size` to call Map size. `.has()` will check and return a Boolean based on whether the map contains the item. `.values()`, `.keys()`, and `.entries()` (which is a combination of the full entry) also exist as methods on the Map object.
+
+Passing `Map` an iterable, like an array of arrays, will cast the internal array into the map. `arr = [ [emp1, 'abc'], [emp2, '123] ]` will output the two inner arrays into the map.
+
+`WeakMap` will only store data until it gets garbage collected. If you set an entry to `null` so it gets picked up by the GC cycle, it'll disappear. That said, you can't check the `size` of a WeakMap. Once something is GC'd, it's impossible to find a reference to it.
 
 ### Set and WeakSet
 
+`Set` and `WeakSet` are meant to deal with single values or objects. They hold exactly one copy of whatever is injected into them - there's no mapping of a key/value relationship. `Set` is used to **ensure uniqueness**, and `WeakSet` functions like `WeakMap`, dumping data upon garbage collection. Like `Map`, `Set` can take an iterator in its constructor and will spread the data into the Set.
+
+The available methods are `.add()` to add items, `.size`, `.remove()`, `.has()` returning a Boolean, `.keys()`, `.values()` both of which display each item because the items are treated the same, and `.entries()` which returns two of each item since the key and value are the same.
+
+``` JS
+let perks = new Set([
+  { id: 800 },
+  { id: 800 }
+]);
+
+console.log(perks.size); // 2
+```
+
+This returns two since both objects, while the same content, are actually two unique object literals in memory.
+
 ### Subclassing
+
+Most built-in objects (Array, RegExp, Function, Number, etc.) can be subclassed, or extended. Before working with subclasses (as with most things) be sure the target platform can handle it. [CanIUse](https://caniuse.com) and [Kangax's Chart](https://kangax.github.io/compat-table/es6/) should give an indication of availability.
+
+Subclassing is essentially using `extends` as you would on any standard `class` object.
+
+``` JS
+class Perks extends Array {}
+let a = Perks.from([5, 10, 15]); // Works exactly like Array.
+```
 
 ## The Reflect API
 
 ### Construction and Method Calls
 
+`Reflect` is an non-function object (i.e. not constructible) that provides methods for operations. When arguments are passed to the construct method, they need to be array elements.
+
+`Reflect.construct(target, argumentsList[, newTarget])`
+
+``` JS
+class Restaurant {}
+let r = Reflect.construct(Restaurant);
+console.log(r instanceof Restaurant); // true
+```
+
+``` JS
+class Restaurant {
+  constructor(name, city) {
+    console.log(`${name} in ${city}`);
+  }
+}
+let r = Reflect.construct(Restaurant, ["Zoey's", "Goleta"]);
+```
+
+The third argument of construct (optional `newTarget`) will replace the value of `new.target` in the construction class. This means in the example below, restaurantMaker is not being _invoked_ `()`, so it simply prints the function in place of the `new.target` value.
+
+``` JS
+class Resturant {
+  constructor() {
+    console.log(`new.target: ${new.target}`); // Points to the call point.
+  }
+}
+function restaurantMaker() {
+  console.log(`in restaurantMaker`);
+}
+let r = Reflect.construct(Restaurant,
+          ["Zoey's", "Goleta"], restaurantMaker);
+```
+
+We can call functions with `Reflect.apply(target, thisArgument, argumentsList)` through our class construction. By accessing `Restaurant.prototype.show` below, we can pass the id through the method. `Reflect.apply()` is a low level function that doesn't need an instance of a class to interact with the class constructor.
+
+``` JS
+class Restaurant {
+  constructor() {
+    this.id = 33;
+  }
+  show(param) { // Accepts from argumentList of .apply.
+    console.log(this.id);
+  }
+}
+Reflect.apply(Restaurant.prototype.show, { id: 99 }, ['REST:']);
+// REST: 22
+```
+
 ### Reflect and Prototypes
 
+`Reflect.getPrototypeOf(target)` which will pull the prototype of an object/function.
+
+```JS
+class Location {
+  constructor() {
+    console.log('constructing Location');
+  }
+}
+class Restaurant extends Location {}
+console.log(Reflect.getPrototypeOf(Restaurant)); // Logs Location's constructor().
+```
+
+`Reflect.setPrototypeOf(target, prototype)` allows for passing of new prototypes.
+
+``` JS
+class Restaurant {}
+let setup = {
+  getId() { return 88; }
+}
+
+let r = new Restaurant();
+Reflect.setPrototypeOf(r, setup);
+console.log(r.getId()); // Passes 88 because the literal was attached.
+```
+
 ### Reflect and Properties
+
+
 
 ### Reflect and Property Extensions
 
