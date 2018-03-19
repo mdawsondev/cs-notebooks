@@ -188,6 +188,151 @@ I'm also pretty sure there's a custom validation message feature inside of HTML5
 
 ## Music & Video
 
+* Native Media Element (Audio/Video Type)
+* Media Types (Encoding)
+* Speech API
+
+Audio and video elements need their `controls` enabled to display them; you can also use multiple sources (stacked in order of importance) to serve the video to each supported format. The reason `controls` is option is because you may need to control all the settings yourself. Addling the `loop` attribute will cause an automatic looping process. `preload` is available with the inputs `auto`, `metadata`, and `none`. The `poster` attribute can be tethered to the `video` element so you can add an image rather than the first frame of a video.
+
+JavaScript can be used to control the media element controls. By disabling the `controls` option, you can get collect the UI elements via JavaScript. These elements need their event listener functions to process the expected results. I'm not taking notes about each individual case because I can look them up if I decide to do this down the line - the important thing is knowing it's possible.
+
+* video = document.getElementById('vid')
+* remainingTime = document.getElementById('remainingTime')
+* totalTime = document.getElementById('totalTime')
+* playPause = document.getElementById('playPause')
+* stop = document.getElementById('stop')
+* rewind = document.getElementById('rewind')
+* begin = document.getElementById('begin')
+* end = document.getElementById('end')
+* fastForward = document.getElementById('fastForward')
+* volume = document.getElementById('volume')
+* mute = document.getElementById('mute')
+* scrubber = document.getElementById('scrubber')
+* playbackRate = document.getElementById('playbackRate')
+
+Video and audio can be put into an "autoplay" sequence by looking at the "ended" event of the video then loading the next video. Again, this isn't really an HTML5 feature as much as it is a JavaScript recipe, so I'm not taking notes on this individual technique.
+
 ## Drawing Shapes, Charts, and More
 
+_Aside: Images are displayed as Raster (Pixeled) vs Vector (Math-based)._
+
+The canvas system is built on top of a grid system that looks a bit like a math-based plot, however the y-axis is reversed (negatives on top, positives on bottom). It's easier to think of this in terms of the CSS axis chart. A canvas element must be invoked to be used via `<canvas id="canvas" width="600" height="400"></canvas>`, then it can be manipulated by the canvas API via JavaScript.  Nothing has actually been created until the path has been filled.
+
+Once a canvas has been called to the DOM, it can be hooked via `canvas = document.querySelector('#canvas');` and given 2d context via `context = canvas.getContext('2d');` to hook the 2d-path.
+
+1. `context.beginPath();` - Be aware of what's happening next.
+2. `context.moveTo(75, 50);` - Establish starting position.
+3. `context.lineTo(75, 100);` - Establish the second position with a lined edge.
+4. `context.lineTo(25, 100);` - Establish the third position with a lined edge.
+5. `context.fill()` - This takes the last point of a path and connects it to the first position, then fill it.
+
+Alternative to running `.fill()`, canvas is able to close the path with `context.closePath();` and fill it with custom styles and colors. `.fillStyle = '#555"` for fill colors, `.fill()` will then fill the customized path. Other methods include `.lineWidth`, `.lineJoin`, `strokeStyle`, and `.stroke` to combine into a border (stroke) path.
+
+### Rectangles
+
+Rectangles can be quickly crafted by calling a `.fillStyle` property and then a `.fillRect()` method.
+
+1. `context.fillStyle = 'rgb(500, 0, 0)';`
+2. `context.fillRect(50, 50, 100, 100);` where (x, y, width, height).
+
+Note: applying fill first will cause the stroke to take half its body inside and outside the path; applying stroke first will cover it with the fill. Think of this as working in layers - the new layer will sit on top of the existing canvas work.
+
+### Arcs, Text, and Gradients
+
+Radial Gradients:
+``` JS
+var g1 = context.createRadialGradient(
+  160, // X of start
+  120, // Y of start
+  0,   // Radius of start circle
+  320, // X of end
+  220, // Y of end
+  300);// Radius of end circle
+)
+g1.addColorStop(0, '#ffffff'); // Values between 0 - 1 to represent keyframe entirety.
+g1.addColorStop(1, '#999999');
+```
+
+Circle (Using Radial Above):
+``` JS
+context.lineWidth = 0;
+context.strokeStyle = '#000000';
+context.fillStyle = g1;
+context.beginPath();
+context.arc(
+  180, // X of start
+  180, // Y of start
+  160, // Radius
+  0,   // Start Angle
+  Math.PI * 2, // End Angle, this is a full circle.
+  true);       // Direction anticlockwise
+)
+```
+
+Text:
+``` JS
+context.fillStyle = '#ffffff';
+context.font = '280px Arial';
+context.fillText('C', 80, 280); // Text, X, Y.
+```
+
+### Scale, Rotation, Translation
+
+To place an image on a canvas:
+``` JS
+var img = new Image();
+img.onload = () => {
+  context.drawImage(img, 0, 0) // File, X, Y
+}
+img.src = "my/img.jpg";
+```
+
+Calling `context.scale(.5, .5)` where X and Y scales to the input will let you scale the canvas references.
+Calling `context.rotate(0.2)` where the input is a radian.
+Calling `context.translate(50, 50)` where X and Y translation pixels.
+
+### Canvas State
+
+Canvas can have its state saved and you can navigate between saved states. States are also stackable, so calling restore will take you to the last snapshot on the stack. Keyword of stack meaning FILO. Calling `context.restore()` will jump back to the previous `context.save()`.
+
+### Animation
+
+He kind of blew right throug this lesson but the idea is that a canvas can create animation by implementing positional changes like `(x+=10)` to increment positional changes and then firing the changes with a `setInterval` function. I'll need to revisit this if I intend to do any sort of realistic animating on canvas.
+
+### Clipping
+
+Clipping involves creating a restricted display area of an image. Basically, think of a clipping mask in Photoshop: you can have areas display or hide based on whether their clipping is active. Invoking `context.clip()` will create a clipping area based on the existing item. Clipping must be invoked before anything is put on the layers above which it was created. Clips can be cleared with calls to `restore()` to load saves made before clips are created. State management is important.
+
+### Miscellaneous
+
+Craig builds a magnification function and a couple of charts here but it would be too much and too specific to take notes on. Just a note, if you're not dynamically changing data within the canvas, there's no reason not to use a static image. In his static chart demo, Craig uses a photo of a blank chart with labels and grids and then plots the line data on top of the image. Simulating data addition can be managed with a new `setInterval` and using an index count. This could potentially be a use case for a generator? Probably not. Much wow, amazing notes. Canvas elements are powerful tools, they can be used for things like taking thumbnail screenshots of actively playing video.
+
 ## Drag and Drop
+
+Drag and drop works by defining a drag source and a drop target. Once an element is tagged `draggable="true"`, it may be dragged around. The key to having this feature work is that **you must cancel default behavior** to have drop functionality. The reason behind the implementation is to keep pages secure. You can drag elements around the page all you like, but to drop it into the drop target you must explicitly tell it to accept the draggable action. The *drag source* is the element being moved, the *drop target* is the element you drag the drag source over.
+
+Drag and drop functionality is controlled via JavaScript with event listeners. You create an event listener for the events internally coded on the drag source and drop target. There's a lot of demo content here but I don't think any of it is actually boilerplate for drag and drop functionality, and if it is, I'll look it up as I need it. There were some interesting ideas about dragging text and files into the DOM, where it's processed and displayed in the drop target.
+
+Note: images and links are already set up to be draggable in the browser.
+
+``` Js
+var drop = function(e) {
+  if (e.preventDefault) {
+    e.preventDefault();
+  }
+  // handle drop here
+  return false;
+}
+```
+
+Drag Source Events:
+* dragstart
+* drag
+* dragend
+
+Drop Target Events:
+* dragenter
+* dragover
+* dragleave
+* drop
+
