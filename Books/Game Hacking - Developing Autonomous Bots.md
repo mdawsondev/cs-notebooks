@@ -100,7 +100,7 @@ _Aside: Many game hackers prefer to have their chains in place rather than encap
 
 From a reverse engineering perspective, you could analyze the assembly code and find what pointer path accessed which value, but that takes a lot of time and advanced tools. **Pointer scaners** solve this by brute-forcing to recursively iterate over every possible chain until they find one that leads to the target address.
 
-``` c+++
+``` c++
 list<int> pointerScan(target, maxAdd, maxDepth) {
   for address = BASE, 0x7FFFFFF, 4 {
     ret = rScan(address, target, maxAdd, maxDepth, 1)
@@ -173,4 +173,22 @@ If the results *still* aren't narrow enough, try running the scan across system 
 
 Once narrowed down, double-click on a useable pointer chain to add it to the cheat table. If you have multiple results, grab the one with the fewest offsets. If multiple chains have identical offsets, the data is possibly stored in a dynamic data structure.
 
-_p18_
+### Lua Scripting Environment
+
+CE supports the use of Lua scripting which brings code functionality to memory editing. Various scripts involve things like searching assembly code for functions that contain specific patterns. These scripts can compose outgoing packets and send them to a server. There's a couple other examples, but nothing overwhelmingly useful in this section because it's psuedocode and pretty specific.
+
+Memory reading creates high overhead, though, and optimization is extremely important. Running a method like `readString()` vs manually crawling through byte data can potentially cause massive increase in overhead.
+
+## Debugging Games with OllyDbg
+
+OllyDbg is functionally similar to modern code-level debuggers but it interfaces with the assembly code of an application, working in the absense of source code and debug calls. Game hackers typically spend most of their time in the CPU panel which outputs the disassembler, registers, dumps, and the stack. Inside the disassembler are the adresses, hex dump, disassembly, and comment terminals.
+
+The address column displays the address of each operation in the attached program. Double-clicking an address with toggle the *display base* flag; when toggled, the address column displays al other addressess as realative offsets.
+
+The hex dump displays the byte code for each operation; black brackets span multiple lines on the left side to mark known function boundaries. Operations that have jumps going to them are displayed with a right-facing. Operations performing jumps are shown with an up or down-facing arrow, depending on where they jump.
+
+The disassembly column displays the assembly code of each operation the game performs. Black braces mark bondaries of loops, right-facing arrows attach to the braces to point to conditional statements. Triple right-facing arrows represent a value comparison.
+
+The comment column displays human-readable comments. If OllyDbg encounters known API names it will automatically insert comments with the name of the functions. If it detects arguments being passed, it will name them. Double-clicking on output will allow you to add a customized comment.
+
+_p28_
