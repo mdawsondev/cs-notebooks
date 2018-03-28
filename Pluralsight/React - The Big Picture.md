@@ -86,4 +86,97 @@ React
 
 ## Tradeoffs
 
+React offfers a lot of good reasons for use, but it also makes tradeoffs for its environment.
+
+* Framework vs. Library
+* Concise vs. Explicit
+* Template-centric vs. JavaScript-centric
+* Separate vs. Single File
+* Standard vs. Non-standard
+* Community vs. Corporate
+
+### Framework vs. Library
+
+Frameworks are typically used to build a major project from the ground up ensuring stability, while libraries can be systematically implemented into existing projects. React can replace components one at a time in existing apps without creating a lot of overhead or destroying existing structure. 
+
+Frameworks:
+
+* Clear opinions
+* Less decision fatigue
+* Less setup overhead
+* More cross-team consistency
+
+Library
+
+* Light-weight
+* Sprinkle on existing apps
+* Pick what you need
+* Choose best tech
+* Popular boilerplates exist
+
+Existing boilerplates can also turn react into a framework. React is focused on components, where normal frameworks focus on a variety of areas. Where react focuses on components, a framework like Angular focuses on components in addition to testing, HTTP library, routing, i18n, animation, and form validation. These missing features mean react functions explicitly as a library, however, it can be bundled with other technologies to cover the ground (this is where boilerplates take shape).
+
+### Consise 
+
+React trades conciseness for explicitness. The standard before react was via _two-way binding_, while React features _one-way binding_. Two-way binding required less code and was automatic, but one-way offers more control per event and is more explicit (clearly states what happens).
+
+### Template-centric vs. JavaScript-centric
+
+Frameworks like Angular and Vue aim to make HTML more powerful by implementing their own syntax into HTML. React does the opposite, where it uses the power of JavaScript to handle HTML.
+
+Conditional Differences:
+
+* Angular: `<h1 *ngIf="isAdmin">Hi Admin</h1>`
+* Vue: `<h1 v-if="isAdmin">Hi Admin</h1>`
+* Ember: `<h1>{{if isAdmin 'Hi Admin'}}</h1>`
+* React: `{isAdmin && <h1>Hi Admin</h1>}`
+
+Loop Differences:
+
+* Angular: `<div *ngFor="let user of users">{{user.name}}</div>`
+* Vue: `<div v-for="user in users">{{user.name}}</div>`
+* Ember: `{{#each user as |user|}}<div>{{user.name}}</div>{{/each}}`
+* React: `users.map(user => <div>{user.name}</div>)`
+
+Event Differences:
+
+* Angular: `<button (click)="delete()">Delete</button>`
+* Vue: `<button v-on:click="delete">Delete</button>`
+* Ember: `<button onclick={{action 'delete'}}>Delete</button>`
+* React: `<button onClick={delete}>Delete</button>`
+
+Since react is plain JS, this offers autocomplete support and error support. Attribute names in JSX follow camelCase since it follows JavaScript rules.
+
+Template-centric approach
+
+* Little JS knowledge required.
+* Avoid confusion with JS binding
+* Rule of least power
+
+JavaScript-centric
+
+* Little framework-specific syntax
+* Fewer concepts to learn (it's JS).
+* Less code, easier to read.
+
+### Separate vs. Single File
+
+Patterns like MVC popularize separating the **M**odel (JS), **V**iew (HTML), and **C**ontroller (JS). The Model contains the data, and the Controller controls the interactions with the model. In **React**, each component stands on its own as JS and JSX. This means markup and logic are co-located in the same file. React doesn't force styling into the same file, either - it can be handled externally if desired.
+
+React handles the separation of concerns differently. Traditonally each technology is places in a seperate file (HTML, CSS, JS), but in React, all of these technologies are intertwined as a component rather than a language (Button, Datepicker, Accordian, etc.). Each component is a separate concern.
+
+React is used to construct **nested components**. This is best thought of like a Russian Doll set, where each doll contains a smaller doll inside; React keeps this idea in line by creating components that can be used together in a rich reusable way. Components should be thought of in the ATOMIC design. On the author page of Pluralsight, you might construct it in this way.
+
+Star Rating -> Course Summary -> Author Courses
+Author Photo -> Author Summary
+Nav Link -> Sidebar Navigation
+
+### Standard vs. Non-standard
+
+The standard of HTML5 components has not been fully embraced by the community; people still prefer non-standard frameworks. The biggest reason people aren't using standard web components is because browser support requires pollyfills. Browser support is very unsupported and after years of waiting it's become clear that browser vendors have shown little interest in implementing HTML5 components. Additionally, web components don't offer anything new - everything you can do with web components can be done using modern libraries.
+
+### Community vs. Corporate Backing
+
+While React is an open source project, it's backed and maintained by Facebook; this means React is driven by Facebook's needs. It does however mean you get the support of a full-time development staff.
+
 ## Why Not React
