@@ -179,4 +179,85 @@ The standard of HTML5 components has not been fully embraced by the community; p
 
 While React is an open source project, it's backed and maintained by Facebook; this means React is driven by Facebook's needs. It does however mean you get the support of a full-time development staff.
 
-## Why Not React
+## Concerns to Not Use Reaction
+
+* HTML and JSX Differ
+* Build Step Required
+* Version Conflicts
+* Outdated Resources Online
+* Decision Fatigue
+
+### HTML and JSX Differ
+
+JSX compiles to JS. `<h1 color="red">Heading here</h1>` will compile into `React.createElement("h1", {color: "red"}, "Heading here")`. Technically, JSX is optional because it always compiles into JS. This concern is a misconception because the difference of HTML and JSX are trivial. Converting HTML to JSX is trivial.
+
+| HTML | JSX |
+|------|-----|
+|for|htmlFor|
+|class|className|
+|<style color="blue">|<style={{color:'blue'}}|
+|\<!-- Comment -->|{\*/Comment/\*}|
+
+### Build Step Required
+
+The argument is that React requires a build step. This is a pointless argument, though, since nearly any modern web application requires a build step to minify, transpile, and linting code. Both Babel and TypeScript can transpile JSX and boilerplates exist to make it easy to include a build step.
+
+### Version Conflicts
+
+Having a runtime creates potential version conflicts. You can't have two versions of React running at the same time on the same page; this means all react components must be in the same version. Standard web components don't require a runtime, but that comes with the negatives outlined above. However, React is often used with other React sources like React Router; this means you **must** run a recent version of React to support the other imports. This is usually not an issue due to the nature of React's code mod support, though.
+
+### Old Stuff Online
+
+There's a concern that old samples will show up in searches since it's evolved from its conception. Some features have been extracted from React Core to keep the library lean. `react-dom` was moved to a different package, `React.createClass` was extracted to `create-react-class`, `PropTypes` was extracted to `prop-types`, `mixins` were removed for higher order components and render props.
+
+### Decision Fatigue
+
+Due to React's design, it means one thing can be done in many ways. This is abstractly different than a framework where there are designated solutions. There are five fundamental ideas that you need to choose upfront.
+
+* Dev environment
+* ES class or createClass
+* Types
+* State
+* Styling
+
+#### Developer Environment
+
+There are over 100 React boilerplates; `create-react-app` is the suggested basic configuration, but having so many options means that picking the exact environment can be a chore.
+
+#### ES Classes or createClass
+
+Each has its advantages. `createClass` is typically friendlier to beginners since avoids confusion around JavaScript's `this` keyword by autobinding functions, while `ES Class` is the most popular and powerful method.
+
+```jsx
+// createClass
+var createReactClass = require('create-react-class');
+
+var Greeting = createReactClass({
+  render: function() {
+    return <h1>Hello</h1;
+  }
+})
+
+// ES Class
+import React from 'react';
+
+class Greeting extends React.Component {
+  render() {
+    return <h1>Hello</h1>;
+  }
+}
+```
+
+#### Types
+
+There are three ways to handle types in React: React PropTypes, TypeScript, or Flow. With PropTypes, types are only checked at runtime, and only during development. TypeScript follows the standard typing method of `<var-name>: <type>`, and checks types at compile time so you find out earlier about type relations. Flow intelligently checks types by annotating `// @flow` at the top of any file you want it to check, then passing the same `<var-name>: <type>` pattern; types are checked when flow is run.
+
+PropTypes is generally recommended, followed by TypeScript, then Flow.
+
+#### State Management
+
+State (data) is generally handled by four management systems: Plain React, FLux, Redux, and MobX. React handles component state fine by itself, so the other systems are optional. Flux will offer centralized state, Redux does the same and is the most popular choice by offering Flux's ability in a better way, and MobX offers observable state.
+
+#### Styling
+
+There are countless suggested stylings for React, but the recommendation is to just use what you already know.
