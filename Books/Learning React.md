@@ -290,3 +290,269 @@ The second method takes a higher order function `compose` that can take any numb
 #### Putting it all together
 
 This section discusses using the concepts above to build a ticking clock. I've built this externally on [GitHub Gist as ticking-clock.js](https://gist.github.com/mdawsondev/7d3d4ee66b9670490fe3889ed99a3a9c).
+
+## Chapter 4 - Pure React
+
+To work with React in the browser, you must include two libraries: React, and ReactDOM. React is the library for creating views, and ReactDOM is the library used to actually render the UI. ReactDOM was split from React and must now be imported for browser use.
+
+An HTML element that ReactDOM will hook to must also be supplied. Both libraries are available on Facebook CDN as import scripts.
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+  <title>Pure React Samples</title>
+</head>
+<body>
+  <!-- Target container -->
+  <div class="react-container"></div>
+  <!-- React library & ReactDOM-->
+  <script src="https://unpkg.com/react@15.4.2/dist/react.js"></script>
+  <script src="https://unpkg.com/react-dom@15.4.2/dist/react-dom.js"></script>
+  <script>
+  // Pure React and JavaScript code
+  </script>
+</body>
+</html>
+```
+
+### Virtual DOM
+
+Traditionally websites were made of independant HTML elements; with AJAX came the implementation of SPA (Single Page Applications). In an SPA, the browser loads one HTML document and JS destroys and creates new UI as the user interacts with the page. The DOM API is a collection of objects used to render and manipulate the DOM (document.createElement, for example). This process is taxing on the website, and can cause slowness.
+
+React was designed to update the browser DOM for us; it doesnt involve complexities associated with standard SPAs. We don't interact with the DOM API; instead, we interact with the **virtual dom** which allows us to construct the UI and update the browser behind the scenes.
+
+### React Elements
+
+The DOM is made of DOM elements, while React's DOM is made of React elements. They look the same, but they're not. A react element is a description of what the actual DOM element should look like. They're the instructions for how the DOM should be created.
+
+React elements are created using `React.createElement`, where we can create an `h1` element by writing `React.createElement('h1', null, 'Baked Salmon')`. The first argument defines the type, the second argument represents the elements properties, and the third argument represents the element's children nodes. During the render, React will convert the element into an actual DOM element `<h1>Baked Salmon</h1>`.
+
+When an element has attributes, they can be described with properties, for example: `React.createElement("h1", {id: "recipe-0", "data-type": "title"}, "Baked Salmon")` will output `<h1 data-reactroot id="recipe-0" data-type="title">Baked Aslmon</h1>`.
+
+`data-reactroot` appears as an attribute of the root element in your React component.
+
+Logging the element created by React will yeild the object. The `type` property of the React element tells what type of SVG or HTML element to create. The `props` property represents the data and child elements required to construct a DOM element. The `children` property is for displaying other nested elements as text.
+
+``` js
+{
+$$typeof: Symbol(React.element),
+  "type": "h1",
+  "key": null,
+  "ref": null,
+  "props": {"children": "Baked Salmon"},
+  "_owner": null,
+  "_store": {}
+}
+```
+
+### ReactDOM
+
+ReactDOM contains the tools required to render React elements in a browser. It contains the `render` method as well as `renderToString` and `renderToStaticMarkup`. React elements and their children can be rendered with the `ReactDOM.render` call. The element we want is passed as the first argument, and the second argument is the targe node.
+
+```js
+var dish = React.createElement("h1", null, "Baked Salmon")
+ReactDOM.render(dish, document.getElementById('react-container'))
+```
+
+ReactDOM allows you to render a single element to the DOM; it tags this as `data-reactroot`, and all other React elements are composed into a single element using nesting. React renders child elements when using `props.children`. We can also render other elements as children nodes, creating a tree of elements known as a _component tree_. For example, we can make a parent `ul` element and nest six `li` elements inside by the following method.
+
+``` js
+React.createElement(
+  "ul",
+  null,
+  React.createElement("li", null, "1 lb Salmon"),
+  React.createElement("li", null, "1 cup Pine Nuts"),
+  React.createElement("li", null, "2 cups Butter Lettuce"),
+  React.createElement("li", null, "1 Yellow Squash"),
+  React.createElement("li", null, "1/2 cup Olive Oil"),
+  React.createElement("li", null, "3 cloves of Garlic")
+)
+
+{
+"type": "ul",
+  "props": {
+  "children": [
+    { "type": "li", "props": { "children": "1 lb Salmon" } … },
+    { "type": "li", "props": { "children": "1 cup Pine Nuts"} … },
+    { "type": "li", "props": { "children": "2 cups Butter Lettuce" } … },
+    { "type": "li", "props": { "children": "1 Yellow Squash"} … },
+    { "type": "li", "props": { "children": "1/2 cup Olive Oil"} … },
+    { "type": "li", "props": { "children": "3 cloves of Garlic"} … }
+  ]
+  ...
+  }
+}
+```
+
+Any element that has an HTML class attribute uses `className` for the property instead of `class` because `class` is a reserved word in JS.
+
+### Constructing Elements with Data
+
+Since React is just JavaScript we can use code to store data like we would normally do. Rather than creating several hard-coded elements, we can map items from an array in a loop. Passing an array without key properties will throw a warning, however. React likes your elements to have keys, so we can bypass this warning by providing a unique key.
+
+``` js
+var items = [
+  "1 lb Salmon",
+  "1 cup Pine Nuts",
+  "2 cups Butter Lettuce",
+  "1 Yellow Squash",
+  "1/2 cup Olive Oil",
+  "3 cloves of Garlic"
+]
+
+React.createElement(
+  "ul",
+  { className: "ingredients" },
+  items.map((ingredient, i) =>
+    React.createElement("li", {key: i}, ingredient)
+)
+```
+
+### React Components
+
+Every UI is made of parts; in React we call these parts components. Components allow us to reuse structures. When building an interface, look for opportunities to break the elements into reusable pieces. For example, a recipe app might be composed of a component containing ingredients, a component containing instruction, and those components are wrapped into an indexing card.
+
+### React.createClass
+
+`React.createClass` may be depreciated in the future so I have no idea why the author is talking about this, but: we can create a React component using React.createClass that returns an element. `displayName` is our element's name, in the case below, `<IngredientsList></IngredientsList>`.
+
+``` js
+const IngredientsList = React.createClass({
+  displayName: "IngredientsList",
+  render() {
+    return React.createElement("ul", {className: "ingredients"},
+      this.props.items.map((ingredient, i) =>
+        React.createElement("li", { key: i }, ingredient)
+      )
+    )
+  }
+})
+
+const items = [
+  "1 lb Salmon",
+  "1 cup Pine Nuts",
+  "2 cups Butter Lettuce",
+  "1 Yellow Squash",
+  "1/2 cup Olive Oil",
+  "3 cloves of Garlic"
+]
+
+ReactDOM.render(
+  React.createElement(IngredientsList, {items}, null),
+  document.getElementById('react-container')
+)
+```
+
+Components are objects; they can be used to encapsulate code just like classes. We can create a method that renders a single list item and use that to build out the list. This is also the idea of views in MVC languages; everything that is associated with the UI for IngredientsList is encapulated into one component; everything we need is right there.
+
+```js
+const IngredientsList = React.createClass({
+  displayName: "IngredientList",
+  renderListItem(ingredient, i) {
+    return React.createElement("li", {key:i}, ingredient)
+  },
+  render() {
+    return React.createElement("ul", {className: "ingredients"},
+      this.props.items.map(this.renderListItem)
+    )
+  }
+})
+```
+
+### React.Component
+
+One of the key features included in the ES6 spec is `React.Component`, an abstract class that we use to build new components. We create custom components through inheritance by extending this class with ES6 syntax.
+
+``` js
+class IngredientsList extends React.Component {
+  renderListItem(ingredient, i) {
+    return React.CreateElement("li", {key:i}, ingredient)
+  }
+
+  render() {
+    return React.createElement("ul", {className: "ingredients"},
+      this.props.items.map(this.renderListItem)
+    )
+  }
+}
+```
+
+### Stateless Fucntional Components
+
+Functional components are functions, not objects, therefore they don't have a `this` scope. They are simple, pure functions and will be used frequently. They take in a property and return a DOM element. They're a good way to practice the rules of functional programming; they should take in props and return an element without causing side effects.
+
+
+```js
+const IngredientsList = ({items}) =>
+  React.createElement("ul", {className: "ingredients"},
+    items.map((ingredient, i) =>
+      React.createElement("li", { key: i }, ingredient)
+    )
+  )
+```
+
+### DOM Rendering
+
+This section just talks about how React replaces sectional changes rather than rerendering the entire DOM; nothing really noteworthy.
+
+### Factories
+
+A `factory` is a special object used to abstract away the details of instancing objects. React has built-in factories for all the commonly supported HTML and SVG DOM elements, and you can create your own via `React.createFactory`.
+
+`React.DOM.h1(null, "Baked Salmon")`.
+
+```js
+var items = [
+  "1 lb Salmon",
+  "1 cup Pine Nuts",
+  "2 cups Butter Lettuce",
+  "1 Yellow Squash",
+  "1/2 cup Olive Oil",
+  "3 cloves of Garlic"
+]
+
+var list = React.DOM.ul(
+  { className: "ingredients" },
+  items.map((ingredient, key) =>
+    React.DOM.li({key}, ingredient)
+  )
+)
+
+ReactDOM.render(
+  list,
+  document.getElementById('react-container')
+)
+```
+
+### Using Factories with Components
+
+Factories can quickly render React elements; however factories are almost exclusively use for non-JSX design.
+
+``` js
+const { render } = ReactDOM;
+const IngredientsList = ({ list }) =>
+  React.createElement('ul', null,
+    list.map((ingredient, i) =>
+      React.createElement('li', {key: i}, ingredient)
+    )
+  )
+
+const Ingredients = React.createFactory(IngredientsList)
+
+const list = [
+  "1 lb Salmon",
+  "1 cup Pine Nuts",
+  "2 cups Butter Lettuce",
+  "1 Yellow Squash",
+  "1/2 cup Olive Oil",
+  "3 cloves of Garlic"
+]
+
+render(
+  Ingredients({list}),
+  document.getElementById('react-container')
+)
+```
+
