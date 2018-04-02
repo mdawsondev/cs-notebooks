@@ -156,3 +156,157 @@ You only need to use this syntax if your update depends on the current state. Si
 
 ### Reusable Components
 
+In this subsection, we split the single component into two: one as the button incrementer, and one to display the result. Since our result component has no state of its own, we can use the function component syntax. To have it display along with our button component, we must render it.
+
+``` jsx
+const Result = (props) => {
+  return (
+    <div>...</div>
+  );
+};
+```
+
+To include multiple components, we'll create a new App component that houses the rest of our built components. We use the class syntax because we intend to introduce a state object. The parent div housing the other elements is not optional; a react component can only return one element.
+
+``` jsx
+class App extends React.Component {
+  render() {
+    return (
+      <div>
+        <Button />
+        <Result />
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(<App />, mountNode);
+```
+
+Now that we've separated the button from the result, we can change the label to `+1` rather than displaying the output. The problem is **the state of a component can only be acessed by that component**. In order to allow a sibling component to access another component, we need to move it one level up into the parent of both sibling elements.
+
+We also need to move the function to the parent function. But, to make the button component able to increment the parent state we pass it a reference parameter.
+
+`onClickFunction` can be named anything, technically.
+
+``` jsx
+class App extends React.Component {
+  state = { counter: 0 };
+
+  incrementCounter = () => {
+    this.setState(prevState => ({
+        counter: prevState.counter + 1
+    }));
+  }
+
+  render() {
+    return (
+      <div>
+        <Button onClickFunction={this.incrementCounter} />
+        <Result />
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(<App />, mountNode);
+```
+
+Now that we've passed the reference to our function down to `Button`, we can use it via the onClick value. This function will sit on the button's `this.props` property. It should be noted that accessing the properties _of a class component_ is `this.props`.
+
+``` jsx
+class Button extends React.Component {
+  render () {
+    return (
+      <button onClick={this.props.onClickFunction}>
+        +1
+      </button>
+    );
+  }
+}
+
+ReactDOM.render(<Button />, mountNode);
+```
+
+To have our Result component read the value, we can use the same passing method that we used for our Button component. `<Result counter={this.state.counter}>` To access this property in our _function component_, we only need to access the argument we passed (`props.passedArguments`). It should be noted that the `props.counter` property is not a state, its just a value that the App counter state is passing to it.
+
+``` jsx
+const Result = (props) => {
+  return (
+    <div>{props.counter}</div>
+  );
+};
+```
+
+#### Reusability
+
+Since the idea of components is to make them as resuable as possible, we want our button component to be able to pass any addition value, not just "+1". To do this, we want to pass the argument into our button as a property. We can then pull the value as a `this.props` property, making our button dynamic for any passed values.
+
+`<Button incrementValue={1} onClickFunction={this.incrementCounter} />`
+`<Button incrementValue={5} onClickFunction={this.incrementCounter} />`
+`<Button incrementValue={10} onClickFunction={this.incrementCounter} />`
+`<Button incrementValue={100} onClickFunction={this.incrementCounter} />`
+
+``` jsx
+class Button extends React.Component {
+  render () {
+    return (
+      <button onClick={this.props.onClickFunction}>
+        +{this.props.incrementValue}
+      </button>
+    );
+  }
+}
+
+ReactDOM.render(<Button />, mountNode);
+```
+
+To have these buttons work, our `this.incrementCounter` function now needs to be passed an argument to dynamically create the value changes.
+
+``` jsx
+  incrementCounter = (incrementValue) => {
+    this.setState(prevState => ({
+        counter: prevState.counter + incrementValue
+    }));
+  }
+```
+
+Every Button component needs to invoke this function with an argument now, since we're calling for a parameter. This parameter has nothing to do with the attribute property and can be named whatever you want, but it should be kept the same to avoid confusion. This property can be passed with a simple inline function.
+
+``` jsx
+class Button extends React.Component {
+  render () {
+    return (
+      <button onClick={() =>
+        this.props.onClickFunction(this.props.incrementValue)
+      }>
+        +{this.props.incrementValue}
+      </button>
+    );
+  }
+}
+
+ReactDOM.render(<Button />, mountNode);
+```
+
+This is better solved by using a pre-existing function, though, so we're not creating a new anonymous function every time we invoke an event. Since we need to have a class to encapsulate a function to a component, we can keep Button as a class component even though it has no state of its own.
+
+``` jsx
+class Button extends React.Component {
+  handleClick = () => {
+    this.props.onClickFunction(this.props.incrementValue);
+  }
+
+  render () {
+    return (
+      <button onClick={this.handleClick}>
+        +{this.props.incrementValue}
+      </button>
+    );
+  }
+}
+
+ReactDOM.render(<Button />, mountNode);
+```
+
+## Working with Data
