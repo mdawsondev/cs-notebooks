@@ -310,3 +310,85 @@ ReactDOM.render(<Button />, mountNode);
 ```
 
 ## Working with Data
+
+Before beginning a project, it's important to try and conceptualize your components. In the application we're building, we're making a list of GitHub cards. That's a hint that we need a component for each card, and a component to house the list itself.
+
+You can start with any component you want, but usually it's easier to start at the deepest point in the tree. Sometimes, however, it's useful to start from the top and work towards the depper parts.
+
+A side note: if a component will not have interactivity and isn't a top-level component housing state, the component can be started as a function.
+
+``` jsx
+const Card = (props) => {
+  return (
+    <div>
+      <img src="http://placehold.it/75" />
+      <div>
+        <div>Name here</div>
+      </div>
+    </div>
+  )
+}
+
+ReactDOM.render(<Card />, mountNode);
+```
+
+React components can be styled in a few different ways. A .css file can be included as normal, or you can write CSS inside of React directly. This can be done with the React property `style` which is passed a JS object. `style={{display: 'inline-block'}}`, for example. If you use inline JavaScript styling, you can use the power of JavaScript like you would any other code.
+
+The card components are then housed inside a card list component.
+
+``` jsx
+const Card = (props) => {
+  return (
+    <div>
+      <img src="http://placehold.it/75" />
+      <div>
+        <div>Name here</div>
+      </div>
+    </div>
+  )
+}
+
+const CardList = (props) => {
+  return (
+    <div>
+      <Card />
+    </div>
+  )
+}
+
+ReactDOM.render(<CardList />, mountNode);
+```
+
+If we render `<Card />` more than once at this point, they will all render the same default component. Instead, passing `props` to the component will allow you to dynamically call data with `props.myProperty`.
+
+``` jsx
+const CardList = (props) => {
+  return (
+    <div>
+      <Card name="Jason" id="123" />
+    </div>
+  )
+}
+```
+
+To pass multiple entries to a component so we aren't hardcoding each item, we can pass this through a loop. To begin, we assume we have the desired data in an array housing an object housing each entry.
+
+``` js
+let data = [
+  {name: 'Jason', id='123'},
+  {name: 'Carol', id='456'},
+  {name: 'Sarah', id='789'}
+]
+
+const CardList = (props) => {
+  return (
+    <div>
+      {props.cards.map(card => <Card {...card} />)}
+    </div>
+  )
+}
+
+ReactDOM.render(<CardList cards={data} />, mountNode);
+```
+
+We used the `...` spread feature here instead of individually passing `<Card name={card.name} id={card.id}>` because it distributes the data in an easier to read way; this will also help compensate for large numbers of attributes.
