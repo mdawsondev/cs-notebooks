@@ -67,3 +67,49 @@ Above all, **User Experience** is key.
 
 _[Link to Part 3](https://www.joelonsoftware.com/2000/10/04/painless-functional-specifications-part-3-but-how/)_
 
+In short, if you're working on a team, a program manager is the one technically responsible for writing a specification. Although (obviously) not mandatory, it's a very specific job with specific needs. Ideally, the skills of a good program manager include being well-spoken, diplomacy, market awareness, user empathy, and good at UI design.
+
+Marketers and coders are not ideal program managers because the skills involved are typically so specific to their talents that they fall short in areas that could be taken care of by a specialist. Additionally, you shouldn't have your coders reporting to a program manager. It's time consuming and it's irrelevant beyond the lead developer's reach. Once the specification has been made and agreed upon, the best way to get things done are to give your team the room they need to get it done.
+
+In short, program management is a separate career path. They need to be technical, but they don't need to be good codes. They study UI, meet customers, and write specifications.
+
+## Part 4: Tips
+
+_[Link to Part 4](https://www.joelonsoftware.com/2000/10/15/painless-functional-specifications-part-4-tips/)_
+
+### Keep Things Interesting
+
+Specs are good, but only if they're being read. Typically from large companies, specs are large and mind-numbing papers that may be glanced at then shelved and never seen again. The idea is to keep your specs **interesting** and readable. Being funny is a good way to keep everyone interested because it generates emotion from otherwise boring documents.
+
+### Keep Things Readable
+
+This is as equally important in code as it is in a spec. Although you could get into a mind-numbing paragraph about how a function works, it's easier (and more to the point, clearer) to just write an example and add a technical note.
+
+> Assume a function AddressOf(x) which is defined as the mapping from a user x, to the RFC-822 compliant email address of that user, an ANSI string. Let us assume user A and user B, where A wants to send an email to user B. So user A initiates a new message using any (but not all) of the techniques defined elsewhere, and types AddressOf(B) in the To: editbox.
+
+This could also have been speced as:
+
+> Miss Piggy wants to go to lunch, so she starts a new email and types Kermit’s address in the “To:” box. 
+>
+> **Technical note:** _the address must be a standard Internet address (RFC-822 compliant.)_
+
+They both "mean" the same thing but one is far easier to understand. Having to decrypt the meaning of something is unenjoyable and creates frustation. Your spec needs to be understood by everyone involved on a high-level, and the details are filled in once the picture is clear. When writing a spec, try to imagine the person you're addressing it to and imagine what you're asking them to understand at every step.
+
+### Keep Things Simple
+
+Using simple language helps create clarity. Words like "use" instead of "utilize," although less fancy 🤵, keeps things _understandable_ and easy to digest.
+
+* Short sentences.
+* Avoid walls of text.
+* Use easy words.
+* Screenshots!
+
+The last point, screenshots, is important - pictures make text easier to digest and also create a visual representation of what you're trying to portray. If your spec isn't easy to read, then rewrite it.
+
+### Don't Use Templates
+
+Templating your specs may seem like a good idea initially, but the problem is that each project has its own unique needs. One spec may be entirely different than another. Additionally, using templates creates waste - where _bibliography_ might have been the right choice for one spec, adding it to others would simply be a headache and complete waste of time.
+
+## Summary
+
+Overall, a spec is a document that you want people to read. It gets everyone on the same page, it's easy to understand, and it isn't like reading a technical scientific publication. It paints an extremely clear picture of every detail in easy-to-read language that can be referenced as the project moves forward.
