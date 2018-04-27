@@ -528,7 +528,7 @@ ReactDOM.render(
 
 ### Using Factories with Components
 
-Factories can quickly render React elements; however factories are almost exclusively use for non-JSX design.
+Factories can quickly render React elements; however factories are almost exclusively used for non-JSX design. This this example React quickly renders elements with the `Ingredients` factory.
 
 ``` js
 const { render } = ReactDOM;
@@ -555,4 +555,66 @@ render(
   document.getElementById('react-container')
 )
 ```
+
+## Chapter 5 - React with JSX
+
+Alternatively to typing out verbose `React.createElement` calls is JSX, a JavaScript extension which lets us use React elements that look similar to HTML.
+
+### React Elements as JSX
+
+JSX looks functionally similar to HTML. For example, a simple `<ul> <li></li> <ul>` DOM stack will render in JavaScript under JSX. JSX works with components as well; we simply define the component using the class name. When we pass objects to a component, we surround it with curly braces.
+
+``` js
+React.createElement(IngredientsList,{list:[...]});
+// Equal:
+<IngredientsList list={[...]}/>
+```
+
+### JSX Considerations
+
+Although JSX looks similar to HTML, it's not exactly the same.
+
+* *Nested components:* React allows for nesting components inside of eachother.
+* *className:* `class` is a reserved word in JavaScript, so we use `className="name"` instead.
+* *JavaScript expressions:* JS is wrapped in curly braces to indicate where variables are evaluated. Ex: `<h1>{this.props.title}</h1>`.
+* *Evaluation:* JS added between curly braces gets evaluated. This means operations such as concantenation or addition will occur.
+* *Mapping arrays to JSX:* JSX can be called directly inside of JS functions; see example below.
+
+```jsx
+<ul>
+  {this.props.ingredients.map((ingredient, i)) =>
+    <li key={i}>{ingredient}</li>}
+  )}
+</ul>
+```
+
+### Babel
+
+There's some high-level talk about Babel and discussion what it is and who uses it, but this is about the implementation of including `babel-core` for non-npm build projects. Calling libraries like this will let you avoid having to run complex builds for testing new features.
+
+``` html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>React Examples</title>
+</head>
+
+<body>
+  <div class="react-container"></div>
+  <!-- React Library & React DOM -->
+  <script src="https://unpkg.com/react@15.4.2/dist/react.js"></script>
+  <script src="https://unpkg.com/react-dom@15.4.2/dist/react-dom.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.29/browser.js"></script>
+
+  <script type="text/babel">
+// JSX code here. Or link to separate JavaScript file that contains JSX.
+  </script>
+</body>
+</html>
+```
+
+### Recipes as JSX
+
+Writing in JSX and using React to build a modular architecture is great because it clearly communicates how the application functions. The problem is the browser doesn't understand JSX, so it must be transpiled into pure React.
 
