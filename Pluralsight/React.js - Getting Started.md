@@ -498,3 +498,330 @@ this.setState({userName: ''});
 
 {props.cards.map(card => <Card key={card.id} {...card} />)}
 ```
+
+## Building the Game Interface
+
+To begin this project, we need to start with our basic components. Typically the first component is the `App` component that hosts other components internally. We then build a Game component that can be isolated inside the App.
+
+``` jsx
+class App extends React.Component {
+  render() {
+    return (
+      <div>
+        <Game />
+      </div>
+    )
+  }
+}
+
+class Game extends React.Component {
+  render() {
+    return (
+      <div>
+        <h3>Play Nine</h3>
+      </div>
+    )
+  }
+}
+
+ReactDOM.render(<App />, mountNode);
+```
+
+After creating our main components, we create our sub-components. In this game, we are using star icons as part of the structure, so we'll create a stars component that is nested into the Game component. We also need to show our button and answer box.
+
+``` jsx
+class Game extends React.Component {
+  render() {
+    return (
+      <div>
+        <h3>Play Nine</h3>
+        <Stars />
+        <Button />
+        <Answers />
+      </div>
+    )
+  }
+}
+
+const Stars = (props) => {
+  return (
+    <div className="col-5">
+      <i className="fa fa-star"></i>
+    </div>
+  )
+}
+
+const Button = (props) => {
+  return (
+    <div className="col-2">
+      <button>=</button>
+    </div>
+  )
+}
+
+const Numbers = (props) => {
+  return (
+    <div className="card text-center">
+      <div>
+        <span>1</span>
+        <span className="selected">2</span>
+        <span>3</span>
+      </div>
+    </div>
+  )
+}
+
+const Answer = (props) => {
+  return (
+    <div className="col-5">
+      ...
+    </div>
+  )
+}
+```
+
+Once our layout and basic placeholders have been made, we can add real functionality to the cards. We can create these elements by pushing them into an array and displaying them in the render; React handles this automatically and it can be called with `{stars}`. React encourages the use of `.map` and other `forEach`-esque functions rather than `for` loops, so while we're adding information we apprach the Numbers component with an array.
+
+``` jsx
+const Stars = (props) => {
+  const numberOfStars = 1 + Math.floor(Math.random() * 9);
+
+  let stars = [];
+  for (let i=0; i<numberOfStars; i++) {
+    stars.push(<i key={i} className="fa fa-star"></i>);
+  }
+  return (
+    <div className="col-5">
+      {stars}
+    </div>
+  )
+}
+
+const Numbers = (props) => {
+  const arrayOfNumbers = _.range(1, 10) //lodash
+  return (
+    <div className="card text-center">
+      <div>
+        {arrayOfNumbers.map((number, i) =>
+          <span key={i}>{number}</span>
+        )}
+      </div>
+    </div>
+  )
+}
+```
+
+While this works fine, we don't really want to render the constant arrayOfNumbers every time we render a Numbers object, so it makes it a good candidate for putting it on the Number object as a property. This should be done any time you have a constant shared across all components but no logic is being done on the variable.
+
+``` jsx
+
+Numbers.list = _.range(1, 10)
+
+const Numbers = (props) => {
+  return (
+    <div className="card text-center">
+      <div>
+        {Numbers.list.map((number, i) =>
+          <span key={i}>{number}</span>
+        )}
+      </div>
+    </div>
+  )
+}
+```
+
+## Numbers Selection
+
+To trigger a re-render in React, we must put something in the state and modify it with an action. Since both Answer and Numbers need a re-render, it makes the most sense to place the state on the parent component: Game. Side note, objects are typically faster for data lookup but arrays are fine for small structures. When working to construct a component, it's also suggested to start with fake data and work your way towards including real data once the fake data is working.
+
+This state is needed by two components. The Answers component needs to display the selected numbers, and the Numbers component needs to disable them from selection once used. To access the state in a parent component, the parent component needs to pass the state to the child component as a property.
+
+When we pass our property to Numbers, we need to check whether it exists in the array and give it a different class. We can do this by passing a function into class name that will return the class we want if the number exists in our existing state.
+
+``` jsx
+class Game extends React.Component {
+  state = {
+    selectedNumbers: [2, 4],
+  };
+
+  render() {
+    return (
+      <div>
+        <h3>Play Nine</h3>
+        <Stars />
+        <Button />
+        <Answers selectedNumbers={this.selectedNumbers} />
+        <Numbers selectedNumbers={this.selectedNumbers} />
+      </div>
+    )
+  }
+}
+
+const Answer = (props) => {
+  return (
+    <div className="col-5">
+      {props.selectedNumbers.map((number, i) =>
+        <span key={i}>{number}</span>
+      )}
+    </div>
+  )
+}
+
+const Numbers = (props) => {
+  const numberClassName = (number) => {
+    if (props.selectedNumbers.indexOf(number) >= 0) {
+      return 'selected';
+    }
+  }
+
+  return (
+    <div className="card text-center">
+      <div>
+        {Numbers.list.map((number, i) =>
+          <span key={i} className={numberClassName(number)}>{number}</span>
+        )}
+      </div>
+    </div>
+  )
+}
+```
+
+Once we're able to display the sample data, we can start working on the feature of adding numbers when they've been clicked. We can add this feature by putting a new function in the Game component since we need to pass the results into our `selectedNumbers` state.
+
+``` jsx
+class Game extends React.Component {
+  state = {
+    selectedNumbers: [2, 4],
+  };
+  selectNumber = (clickedNumber) => {
+    this.setState(prevState => ({
+      selectedNumbers: prevState.selectedNumbers.concat(clickedNumber)
+    }))
+  };
+  render() {
+    return (
+      <div>
+        <h3>Play Nine</h3>
+        <Stars />
+        <Button />
+        <Answers selectedNumbers={this.this.selectedNumbers} />
+        <Numbers selectNumber={this.selectNumber} selectedNumbers={this.this.selectedNumbers} />
+      </div>
+    )
+  }
+}
+
+const Numbers = (props) => {
+  const numberClassName = (number) => {
+    if (props.selectedNumbers.indexOf(number) >= 0) {
+      return 'selected';
+    }
+  }
+
+  return (
+    <div className="card text-center">
+      <div>
+        {Numbers.list.map((number, i) =>
+          <span key={i} className={numberClassName(number)}
+              onClick={() => props.selectNumber(number)}>
+            {number}
+          </span>
+        )}
+      </div>
+    </div>
+  )
+}
+```
+
+At this point we've introduced two problem: the Game component rerenders every time we click a number which causes our stars to rerender a random number, and we haven't disabled the ability to click numbers more than one time. When Game rerenders, all of its children are rerendered as well. To solve the first issue, we need to move the star generation up one leven and maintain it on the Game component itself. For our second issue, we simply don't update the state and instead just return.
+
+``` jsx
+class Game extends React.Component {
+  state = {
+    selectedNumbers: [2, 4],
+    randomNumberOfStars: 1 + Math.floor(Math.random() * 9)
+  };
+  selectNumber = (clickedNumber) => {
+    if (this.state.selectedNumber.indexOf(clickedNumber) >= 0) { return; }
+    this.setState(prevState => ({
+      selectedNumbers: prevState.selectedNumbers.concat(clickedNumber)
+    }))
+  };
+  render() {
+    return (
+      <div>
+        <h3>Play Nine</h3>
+        <Stars numberOfStars={this.state.randomNumberOfStars} />
+        <Button />
+        <Answers selectedNumbers={this.selectedNumbers} />
+        <Numbers selectNumber={this.selectNumber} selectedNumbers={this.selectedNumbers} />
+      </div>
+    )
+  }
+}
+
+const Stars = (props) => {
+  return (
+    <div className="col-5">
+      {_.range(props.numberOfStars).map(i =>
+        <i key={i} className="fa fa-star"></i>
+      )}
+    </div>
+  )
+}
+```
+
+Once the numbers are clickable, we need to allow the user to change their answer. We can add this feature by allowing a player to roll back their selection if they click a number in the Answer component (since the state is in the parent, the function will be passed as a prop).
+
+``` jsx
+const Answer = (props) => {
+  return (
+    <div className="col-5">
+      {props.selectedNumbers.map((number, i) =>
+        <span key={i} onClick={() => props.unselectNumber(number)}>{number}</span>
+      )}
+    </div>
+  )
+}
+
+// App.js
+
+unselectNumber = (clickedNumber) => {
+  this.setState(prevState => ({
+    selectedNumbers: prevState.selectedNumbers.filter(number => number !== clickedNumber)
+  }))
+}
+
+<Answers selectedNumbers={this.selectedNumbers} unselectNumber={this.unselectNumber} />
+```
+
+We can (and should) also refactor our code to be more readable and usable.
+
+```jsx
+class Game extends React.Component {
+  state = {
+    selectedNumbers: [2, 4],
+    randomNumberOfStars: 1 + Math.floor(Math.random() * 9)
+  };
+  selectNumber = (clickedNumber) => {
+    if (this.state.selectedNumber.indexOf(clickedNumber) >= 0) { return; }
+    this.setState(prevState => ({
+      selectedNumbers: prevState.selectedNumbers.concat(clickedNumber)
+    }))
+  };
+  render() {
+    const { selectedNumbers, randomNumberOfStars } = this.state; // Deconstructing these!
+    return (
+      <div>
+        <h3>Play Nine</h3>
+        <Stars numberOfStars={randomNumberOfStars} />
+        <Button />
+        <Answers selectedNumbers={selectedNumbers} />
+        <Numbers selectNumber={this.selectNumber} selectedNumbers={selectedNumbers} />
+      </div>
+    )
+  }
+}
+```
+
+## Game State
