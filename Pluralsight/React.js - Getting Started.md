@@ -392,3 +392,109 @@ ReactDOM.render(<CardList cards={data} />, mountNode);
 ```
 
 We used the `...` spread feature here instead of individually passing `<Card name={card.name} id={card.id}>` because it distributes the data in an easier to read way; this will also help compensate for large numbers of attributes.
+
+## Taking Input from the User
+
+When we take user input, we use the component feature so we can store state. Each component should have its own category, so we don't render this in our CardList. Rather than rendering our form in the wrong location, we use a parent component called `App`.
+
+``` jsx
+class Form extends React.Component {
+  render() {
+    <form>
+        <input type="text" placeholder="Github username" />
+        <button type="submit">Add card</button>
+    </form>
+  }
+}
+```
+
+``` jsx
+class App extends React.Component {
+  render() {
+    return (
+      <div>
+        <Form />
+        <CardList cards={data} />
+      </div>
+    )
+  }
+}
+
+ReactDOM.render(<App />, mountNode);
+```
+
+In our current sample, our `data` array is part of the global scope which is bad practice. Since it is part of the application, it should be part of the `App` state.
+
+``` jsx
+class App extends React.Component {
+  state = {
+    cards: [
+      { name: "Someone",
+        avatar: "link",
+        company: "Company" }
+    ]
+  }
+  render() {
+    return (
+      <div>
+        <Form />
+        <CardList cards={this.state.cards} />
+      </div>
+    )
+  }
+}
+
+ReactDOM.render(<App />, mountNode);
+```
+
+Adding functionality to our button is as easy as adding an `onClick` or `onSubmit` event handler. Every React event function receives an event argument which can be passed to the handler. The handler is a wrapper around the native event JavaScript object. To prevent the default behavior of the event, we pass `preventDefault()`. To grab the value from our input, we use React's `ref` property to grab a reference to the element, rather than using a DOM call. `ref` takes a function that is executed when the element is mounted; this function is given a reference to the element, so we can store the reference in the form component instance. The reference can be accessed with `this.userNameInput.value`.
+
+```jsx
+    handleSubmit = e => {
+      event.preventDefault();
+    }
+    // ...
+    <form onSubmit={this.handleSubmit}>
+        <input type="text" ref={(input) => this.userNameInput = input} placeholder="Github username" />
+        <button type="submit">Add card</button>
+    </form>
+```
+
+A better alternative to using `ref` is passing controlled components.
+
+```jsx
+    state = { username: ''}
+    handleSubmit = e => {
+      event.preventDefault();
+    }
+    // ...
+    <form onSubmit={this.handleSubmit}>
+        <input type="text" value={this.state.userName} onChange={(e) => this.setState({userName: event.target.value})} placeholder="Github username" />
+        <button type="submit">Add card</button>
+    </form>
+```
+
+Once we've set up our app to take data from an AJAX get request, we can pass our new user card data to the `Card` component by passing it first through the App. Our parent function becomes a property of App and can be passed on the `.props` list. To append the new information to our previously existing information, we can attach it through the `.setState` method via `this.prevState.cards.concat(cardInfo)`, which will attach it to the currently existing information. In our `Form` component, we can set the state back to an empty string via the state.
+
+It should also be noted that we need a unique `key` for each dynamically generated element to help React find the content internally.
+
+``` jsx
+// App.js
+
+addNewCard = (cardInfo) => {
+  this.setState(prevState => {
+    cards: this.prevState.cards.concat(cardInfo)
+  });
+}
+
+<Form onSubmit={this.addNewCard} />
+
+// Form.js
+
+this.props.onSubmit(data);
+this.setState({userName: ''});
+
+// Card.js
+
+{props.cards.map(card => <Card key={card.id} {...card} />)}
+```
