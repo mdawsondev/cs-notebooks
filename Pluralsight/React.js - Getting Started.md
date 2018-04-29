@@ -825,3 +825,7 @@ class Game extends React.Component {
 ```
 
 ## Game State
+
+I'm stopping notes at this point due to the rest of the course being about finishing the game and not implementing any new React techniques.
+
+To summarize the chapter, the host adds functionality to the button based on a `switch` case for true and false correct answers. Once the button is given functionality, the host adds functionality to creating "used" into our used numbers. Due to the construction of our game, we will eventually run out of possible answers before we've used all of the numbers. To bypass this issue, the host adds a refresh button that redraws the number of stars. We then pass a `doneStatus` variable to display the results of finishing the game. To create a challenge, the refresh button is given a limited number of clicks that when exhausted will display a loss. Once a win or loss has been reached, the user can reset the game.
