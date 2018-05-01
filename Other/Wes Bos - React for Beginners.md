@@ -58,3 +58,33 @@ class StorePicker extends React.Component {
 ```
 
 Note that comments in JSX are not the same as HTML or JavaScript, you need to wrap the comments in curly brackets and use full-length JS commenting format: `{/* This comment will work. */}`.
+
+## Video 5
+
+Importing CSS can be done in a couple of different ways, there's arguments for importing it into the HTML, importing it into individual components, and importing it into the main application. All of these ways work, but most of the time you'll see a main import for the application entry. Part of the `react-scripts` package includes bundling through webpack, and webpack is able to recognize our `import 'style.css'` file and place it between a `style` tag. Due to the hot-reloading functionality, it automatically shows up into our live server.
+
+## Video 6
+
+We'll be creating our `<App />` component, which is kind of like the king of all other components. It imports and houses all of our individual pieces in one location. This is nested in the `components` folder and is home to `<OtherComponent />`, named for each component we import. We use the boilerplate `import ... class ... export` for each component, then import it into the App.js file. We can then use these imports a `<MyComponent />`.
+
+## Video 7
+
+Components function in very much the same way as elements. If we took an `img` tag with the _attributes_ `src="dog.jpg"` and `alt="Dog"`, our `img` tag knows what to do with these attributes because it's been designed to process that specific data. In React, we now refer to those _attributes_ as **props**, or properties. We pass data through props to give it data - again, this is akin to passing information into an HTML tag. You can think of **state** and **props** as the "home" and the "car" of React. State is where data lives, and props is how it is passed from one component to another so it can be used where it's needed.
+
+Props are entirely customized, there's nothing preset outside of reserved words so we can give it the name we want and tie it to the data we want. Props is passed as an object, so on a very fundamental level we can see this as `<Header tagline="My Words">` passing `{tagline: "My Words}`. Anything passed other than a string must be wrapped in curly brackets, e.g. `age={54}`.
+
+We import passed props to their components via `this.props.myProp`, passed through curly brackets to signify that we're parsing JavaScript and not JSX. `this` in this context represents the component `this` is inside of.
+
+**Components are just instanced objects!** You can view the content of the named object by taking a look at `$r` in the developer's tools the same way to look at `$0` for HTML (displayed as `== $0`).
+
+## Video 8
+
+Stateless functional components are another part of React that can be used instead of extending React.Component when there is no existing state on an object. Since we're returning with an arrow function, we can implicitly return our data by using a `()` wrapper which would indicate a `return` without having to include `{}`. We drop the render method and are left with a bare-bones function export.
+
+``` jsx
+const MyComponent = props => (
+  <div>props.myProperty</div>
+);
+```
+
+The `props` argument can also be further deconstructed to the only variables we need by using the deconstruction technique `= ({ prop1, prop2 })` and droping the `props.` from any property calls. Writing a stateless functional component isn't mandatory, but if you don't expect to need to expand the object to hold state it can save time and produces cleaner, faster code.
