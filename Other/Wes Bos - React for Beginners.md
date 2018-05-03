@@ -129,3 +129,109 @@ Now that we can grab out data via `this.myInput.current.value`, we want to work 
 ## Video 13
 
 State is an object that stores data for a component; data can always be passed down, but not up. State and the method that updates state must live in the same component. Since we want to pass data to three of our components, we need to nest it in the top-level component, App. To set state you must use React's `this.setState` API or the state won't work appropriately. State should never be directly modified since React is a functional progrmaming language (no mutations). We can pass an existing copy of the state by setting the property to a variable, compiling the new data, then resetting the state.
+
+## Video 14
+
+Nothing new learned; imported the sample-fishes.js object into state.
+
+## Video 15
+
+In this lesson we import Fish to the CotD list. JSX doesn't have any kind of logic built into it (if, for, etc). To use logic, we need to use normal JS via `{}`. Since our state is an object, we can't `.map` over it, so it needs to be converted to an array via `Object.keys`.
+
+Any time we output a list of data, we need to give each item a unique key for React to use as an identifier. Each fish has a unique name so we can just render `key` (e.g. "fish1") in out `key={}` output.
+
+Because writing `this.props.thing.thing` can become exhausting, it's generally a good idea to set a variable to props by giving a const above the return like and below the render method. We can use ES6 destructuring to make this even cleaner.
+
+## Video 16
+
+It is possible to call a function without having to hardcode it via `$r.myFunction(myProps)`, where $r will hook into React via the console. We also want to pass our key in the function we use in this method. React will _not_ allow you to access a key without passing it as a prop with something other than `key`! `index={key}` is generally accepted.
+
+## Video 17
+
+We need to pass our data to the Order component. We can do this by individually calling everything in our state object, or we can pass this via an object spread. `{...this.state}` will pass everything in state. This isn't generally a good idea though, because when you make a modular component you want to know exactly what data is getting passed in.
+
+## Video 18
+
+Firebase is a backend-as-a-service containing real time data management, while MongoDB is a database with a rich query language that can be run locally. Firebase uses websockets so we can live-reload data rather than having to ping with AJAX for a change. In short, Firebase offers more than "just a database".
+
+Firebase can be connected via `re-base` and `firebase` in React. `firebase` calls the specific database configuration, while `re-base` initializes the application. To have our state information passed into our database, we need to explore **lifecycle methods** so we can pass state once the App has actually been loaded.
+
+We use `componentDidMount()` to execute our database the moment our `App` component is functional. Because firebase will live-listen for changes, it's important to make sure we stop listening once the component unmounts. This can be implemented through `componentWillUnmount()`.
+
+## Video 19
+
+While having persistant data for the store is useful in a database because it provides the users with an immediate update to inventory and availability, storing the user's local information isn't really something we need to do. We can instead store the user's local order in their _localstorage_ to help persist it across page use without having to store their information indefinitely on our database.
+
+We can monitor for changes by using `componentDidUpdate()`, which won't fire on the initial render but will fire on any component updates.
+
+Since we're trying to store `order` from our state, which is an object, we need to parse it with JSON to prevent it from logging `[object Object]` which is simply the `.toString()` call on our `order` object (i.e. useless). - `JSON.stringify(myObj)`.
+
+Due to our `componentDidMount()` firing on pageload, which will trigger `componentDidUpdate` since we're setting new properties, we must first pull our localStorage from the existing local data for it to be used without being overwritten by a blank object. We stringified our object with JSON, so it needs to be converted back to an object to be of any use.
+
+It's important to note that Firebase and localStorage have different sync times so localStorage should fill data after Firebase has provided what's needed.
+
+## Video 20
+
+In this video we passed our fish data into an editable form for updating existing fish. This causes an issue, however, because React doesn't allow you to have state in two places (the input and state). This can be resolved by having a handler on each edit.
+
+If we pass a `name=""` property into our inputs, we can call that on the event fire via `event.currentTarget.name` which will allow you to dynamically update the properties in your event. To pass the data back upstream we need to pass down a method that can be called from the update form.
+
+## Video 21
+
+To allow items to be removed, we need to pass the method down from App again. Firebase requires you to remove items by setting them to `null`, but you can simply use `delete thing[key]` when working with localstorage.
+
+## Video 22
+
+This video talks about animation via CSSTransitions and TransitionGroup, both of which I intend to read the docs on. It's from `react-transition-group` which makes animations in React much easier. Wes also uses Stylus (similar to Sass) which needs to be "ejected" to complile from npm scripts.
+
+CSSTransition and TransitionGroup add timed classes to our nodes that will fire on an enter and exit time. They can be targeted with the selected classNames, e.g. `.order-enter` and `.order-exit` for a starting state, and `.order-enter-active` for a finish state (which is appended immediately following the first class).
+
+If you're using multiple transitions, it's typically pointless to duplicate the data so you can just pass it to a variable and then spread it into the object with `{...transitionOptions}`.
+
+## Video 23
+
+Prop types works like TypeScript in that it allows you to pass in information ahead of use by declaring the property type. This can be imported from the package `prop-types` which is no longer included with `create-react-app` due to some people using things like TypeScript or Flow and not making it necessary.
+
+Prop types will not be deployed to production, so any errors or warnings will be confined to the development space. Prop types for a stateless component must be placed after via `MyStateless.propTypes = { myVar: PropTypes.theType}`. In a full class we can simply add it as a static property via `static propTypes`.
+
+The reason we use `static` is to prevent having to duplicate the proptypes information for every single instance so they can just pull the same data instantly.
+
+When we pass an object as a property we could call `PropTypes.object`, but it's better to pass `PropTypes.shape` to ensure the properties are internally correct.
+
+## Video 24
+
+To begin with Authentication in Firebase, we need to enable the processes and implement our API key calls from the sites we want to use. Once enabled, you need to create an auth provider for each thing that's been enabled due to various templating differences.
+
+The authenticator is pulled from the `firebase` package under the `.auth` method. `const authProvider = new firebase.auth[`${provider}AuthProvider`]()`.
+
+The default enabled rules are only provided client side, which won't lock-down our authentication on Firebase. To do this, we need to change the rules to require real authentication.
+
+## Video 25
+
+Wes discusses the build process from running `npm run build`. Nothing new worth taking notes on.
+
+## Video 26
+
+Hosting on Zeit's Now is simple but requires two packages: `now` as a global package, and `serve` as a server. Now does not provide an internal server and has limited capabilities in size without having a paid plan. Now will run `build` and then `start` when uploaded.
+
+## Video 27
+
+This section covers deployment to Netlify. Their global CLI can be installed with `npm i netlify-cli -g`. Netfliy has issues with router, so you need to include a `_redirects` file inside `./build` with `/* /index.html 200`. These sites don't require a login to upload the plan, and will upload straight from your build files so there's no need to run npm scripts internally.
+
+## Video 28
+
+Uploading to an Apache server is also easy if you're using one through a host. The site must be uploaded to a *subdomain* to be valid, but that subdomain can be aliased through your host. After running a build, simply drag-and-drop the `./build` folder into your FTP client pointing at the appropriate directory. After the upload finished, a refresh should load the content. Any authentications put on unvalidated URLs must be added to the Firebase URL whitelist.
+
+The Apache server will unfortunately suffer the same issue as Netlify, where it looks for folders as part of the URL string, i.e. `store/my-site-name`. This can be resolved through your `.htaccess` file by adding the following lines for a single-page application using router.
+
+``` md
+RewriteBase /
+RewriteRule ^index\.html$ -[L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]
+```
+
+## Lesson 29
+
+`create-react-app` comes with a script to eject all of the build files it uses. This is handy when you need to customize your build and workflow more, but it's recommended that this is done on another branch because once it's run it can't be undone.
