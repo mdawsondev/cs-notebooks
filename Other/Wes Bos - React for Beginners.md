@@ -88,3 +88,44 @@ const MyComponent = props => (
 ```
 
 The `props` argument can also be further deconstructed to the only variables we need by using the deconstruction technique `= ({ prop1, prop2 })` and droping the `props.` from any property calls. Writing a stateless functional component isn't mandatory, but if you don't expect to need to expand the object to hold state it can save time and produces cleaner, faster code.
+
+## Video 9
+
+Since React isn't a framework, it doesn't come packaged with the ability to route components like Angular or Vue might. For this reason we need to use `react-router` or a similar routing tool that allows dynamic URL loading. Everything in React is a component, even the router. Since we're working with the DOM, we import `react-router-dom`. We import `{ BrowserRouter, Route, Switch }` from the package.
+
+Routes take two main parameters, `path` and `component`, where `path` represents the URL location and the component is what is displayed when that location is hit. Adding `exact` to the arguments will ensure it loads the component only when the URL is an exact match. Adding a word behind a colon will dynamically give that location in the URL a param, i.e. `path="store/:storeid"` would render `storeid: '123'` when hitting `store/123`.
+
+## Video 10
+
+Helper functions don't typically need to be stored in a component and can instead be placed into a `helpers.js` file on the root of the application. React doesn't like having `value=""` called because it's supposed to be represented by state, but you can still give a default value by passing `defaultValue=""` on your inputs.
+
+## Video 11
+
+Events in React work like any other event, but they're wrapped in something called a SyntheticEvent that handles cross-browser compatability for the developer automatically. Events are handled in-line by passing `on` and the name of the event to look for, e.g. `onClick={this.handleClick}`. Our function is not called with `()` because that would cause it to fire as soon as the component mounts.
+
+When working with React event calls, you may need to disable the default action of the effect. For example, on submitting a form the page will refresh. This can be deactivated by passing `event.preventDefault();` in the event handler.
+
+To pull the value of our input box we want to pass a `ref` to our handler. React applications shouldn't touch the DOM, so using `document.querySelector()` is generally not a good idea. Using refs has been changed since original use, where string refs and function refs are depreciated in favor of a newer method: putting your ref in the component as a variable with `myVar = React.createRef();` and tagging the element with `ref={this.myVar}`. We can't call the `this` tag in our handler method yet though, because all custom methods that didn't come with React are not bound by default.
+
+Binding `this` to custom methods can be done by passing them through a `constructor()`. ES6 proposes a better way by declaring a property and setting it with an arrow function since arrow functions automatically bind to their lexical container.
+
+``` jsx
+constructor() {
+  super();
+  this.goToStore = this.goToStore.bind(this);
+}
+
+// Do this instead, though:
+
+goToStore = (event) => {
+  console.log(this)
+}
+```
+
+## Video 12
+
+Now that we can grab out data via `this.myInput.current.value`, we want to work with changing the url. We can use what's known as push-state rather than refreshing the page via `window.location`, which will only update our page's content. Since we're already passing our store picker through the Router page, we can access all of the higher-level router functions via props: `this.props.history.push()`.
+
+## Video 13
+
+State is an object that stores data for a component; data can always be passed down, but not up. State and the method that updates state must live in the same component. Since we want to pass data to three of our components, we need to nest it in the top-level component, App. To set state you must use React's `this.setState` API or the state won't work appropriately. State should never be directly modified since React is a functional progrmaming language (no mutations). We can pass an existing copy of the state by setting the property to a variable, compiling the new data, then resetting the state.
