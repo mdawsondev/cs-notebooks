@@ -149,7 +149,7 @@ Anonymous functions are not required for callbacks and this creates what people 
 Typically JavaScript sends a callback to execute a string of async commands.
 
 ``` JS
-function asyncMethod(message, cb){ 
+function asyncMethod(message, cb){
   setTimeout(function() {
     console.log(message);
     cb();
